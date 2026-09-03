@@ -1,0 +1,84 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  password        String
+  role            String   // "ADMIN" | "TEACHER"
+  assignedClasses String?  // JSON string: ["Class 8", "Class 9", "Class 10"]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Student {
+  id          String       @id @default(uuid())
+  rollNumber  String       // e.g. "101"
+  name        String
+  fatherName  String
+  className   String       // e.g. "Class 8", "Class 9", "Class 10"
+  section     String       @default("A")
+  gender      String       // "Male" | "Female"
+  phone       String?
+  dateOfBirth String?
+  address     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  results     ExamResult[]
+  fees        FeeRecord[]
+
+  @@unique([className, rollNumber])
+}
+
+model ExamResult {
+  id            String   @id @default(uuid())
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  examTerm      String   // e.g. "Midterm Examination 2025"
+  academicYear  String   @default("2024-2025")
+  subjectMarks  String   // JSON string: [{"subject":"English","maxMarks":100,"obtainedMarks":88,"grade":"A+","remarks":"Outstanding"}]
+  totalMarks    Float
+  obtainedMarks Float
+  percentage    Float
+  overallGrade  String   // "A+", "A", "B", "C", "F"
+  status        String   // "PASS" | "FAIL"
+  remarks       String?
+  publishedAt   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model FeeRecord {
+  id            String   @id @default(uuid())
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  month         String   // e.g. "September 2025"
+  amount        Float
+  dueDate       String
+  status        String   // "PAID" | "PENDING" | "UNPAID"
+  paidDate      String?
+  receiptNumber String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  category    String   // "NOTICE" | "EVENT" | "HOLIDAY" | "EXAM"
+  isPinned    Boolean  @default(false)
+  publishedBy String   @default("Administration")
+  date        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

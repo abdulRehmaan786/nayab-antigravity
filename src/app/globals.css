@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --primary-navy: #1B2A4A;
+  --primary-navy-dark: #111C32;
+  --primary-navy-light: #283D6A;
+  --accent-gold: #D4AF37;
+  --accent-gold-hover: #BF9B27;
+  --accent-gold-light: #FBF8EE;
+  --bg-page: #F8F9FB;
+  --card-bg: #FFFFFF;
+  --text-main: #1F2937;
+  --text-muted: #6B7280;
+  --border-color: #E5E7EB;
+
+  --status-paid: #16A34A;
+  --status-pending: #D97706;
+  --status-unpaid: #DC2626;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar for data tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Print Specific Rules for Official Report Cards */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print,
+  nav,
+  footer,
+  aside,
+  .chatbot-widget,
+  .print-hide {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .printable-card {
+    box-shadow: none !important;
+    border: 1px solid #1B2A4A !important;
+    border-radius: 0 !important;
+    padding: 24px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 1.2cm;
+    size: A4 portrait;
+  }
+}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Lock, Mail, ShieldCheck, ArrowRight, AlertCircle, Sparkles, UserCheck } from "lucide-react";
+import { Lock, Mail, ShieldCheck, ArrowRight, AlertCircle, Sparkles, UserCheck, GraduationCap, Users } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -60,10 +60,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 font-sans bg-[#F2F4F7]">
       <div className="w-full max-w-md">
         {/* School Logo & Title */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="w-20 h-20 rounded-full bg-white p-1 border-2 border-[#D4AF37] mx-auto shadow-md flex items-center justify-center mb-3">
             <Image
               src="/images/school-logo.png"
@@ -73,16 +73,16 @@ export default function LoginPage() {
               className="w-full h-full object-contain"
             />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#1B2A4A] tracking-tight">
-            Staff Portal Login
+          <h1 className="text-2xl font-bold text-[#0D1B3D] tracking-tight font-heading">
+            School Portal Sign In
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Nayab Grammar School — Mirwah Administration & Faculty
+            Nayab Grammar School Mirwah · Learn · Grow · Succeed
           </p>
         </div>
 
         {/* Login Box */}
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-200/90 p-6 sm:p-8">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
@@ -96,7 +96,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@nayab.edu.pk"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0D1B3D]"
                 />
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0D1B3D]"
                 />
               </div>
             </div>
@@ -128,23 +128,24 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1B2A4A] hover:bg-[#111C32] text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full bg-[#0D1B3D] hover:bg-[#1E3A8A] text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
             >
               <span>{loading ? "Authenticating..." : "Sign In to Dashboard"}</span>
               <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
             </button>
           </form>
 
-          {/* Quick Demo Credentials Box */}
-          <div className="mt-6 pt-5 border-t border-slate-100">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" /> One-Click Evaluation Demo:
+          {/* Quick Demo Login Switcher for all 4 personas */}
+          <div className="mt-6 pt-5 border-t border-slate-100 space-y-3">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" /> Quick Persona Previews:
             </p>
+
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => fillCredentials("admin")}
-                className="bg-[#FCF9EE] hover:bg-amber-100 border border-[#D4AF37] text-[#1B2A4A] px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
+                className="bg-[#FBF8EE] hover:bg-amber-100 border border-[#D4AF37] text-[#0D1B3D] px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>Admin Login</span>
@@ -153,24 +154,43 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => fillCredentials("teacher")}
-                className="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
+                className="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <UserCheck className="w-3.5 h-3.5 text-slate-600" />
+                <UserCheck className="w-3.5 h-3.5 text-[#1E3A8A]" />
                 <span>Teacher Login</span>
               </button>
             </div>
-            <p className="text-[10px] text-slate-400 text-center mt-2.5">
-              Pre-seeded passwords: <code className="text-slate-600 font-mono">Admin@123</code> /{" "}
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <Link
+                href="/student"
+                className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#1E3A8A] px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-center"
+              >
+                <GraduationCap className="w-3.5 h-3.5" />
+                <span>Student View</span>
+              </Link>
+
+              <Link
+                href="/parent"
+                className="bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-center"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>Parent View</span>
+              </Link>
+            </div>
+
+            <p className="text-[10px] text-slate-400 text-center mt-2">
+              Default password: <code className="text-slate-600 font-mono">Admin@123</code> /{" "}
               <code className="text-slate-600 font-mono">Teacher@123</code>
             </p>
           </div>
         </div>
 
-        {/* Public portal link */}
+        {/* Return to Public Website */}
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-xs text-slate-600 hover:text-[#1B2A4A] font-semibold hover:underline"
+            className="text-xs text-slate-600 hover:text-[#0D1B3D] font-semibold hover:underline"
           >
             ← Return to Public Student & Parent Search Portal
           </Link>

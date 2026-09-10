@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, GraduationCap, FileText, CreditCard, Bell, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogIn, LogOut, LayoutDashboard, User } from "lucide-react";
 
 interface UserSession {
   userId: string;
@@ -39,14 +39,16 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { name: "Home", href: "/", icon: GraduationCap },
-    { name: "Result Lookup", href: "/results", icon: FileText },
-    { name: "Fee Status", href: "/fees", icon: CreditCard },
-    { name: "Announcements", href: "/announcements", icon: Bell },
+    { name: "Home", href: "/" },
+    { name: "About Us", href: "/about" },
+    { name: "Academics", href: "/academics" },
+    { name: "Admissions", href: "/admissions" },
+    { name: "Announcements", href: "/announcements" },
+    { name: "Contact Us", href: "/contact" },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#1B2A4A] text-white shadow-md border-b border-[#D4AF37]/30">
+    <header className="sticky top-0 z-40 bg-[#0D1B3D] text-white shadow-md border-b border-[#D4AF37]/30 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Brand Logo & Name */}
@@ -65,47 +67,49 @@ export default function Navbar() {
               <span className="font-bold text-lg sm:text-xl tracking-tight leading-none text-white group-hover:text-[#D4AF37] transition-colors">
                 NAYAB GRAMMAR SCHOOL
               </span>
-              <span className="text-xs text-slate-300 tracking-wider uppercase mt-1 font-medium flex items-center gap-1.5">
+              <span className="text-[11px] text-slate-300 tracking-wider uppercase mt-1 font-medium flex items-center gap-1.5">
                 <span>Mirwah</span>
                 <span className="inline-block w-1 h-1 rounded-full bg-[#D4AF37]"></span>
-                <span className="text-[#D4AF37]">Est. 2012</span>
+                <span className="text-[#D4AF37] font-semibold">Learn · Grow · Succeed</span>
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1.5">
+          {/* Desktop Navigation Links (matching design sheet) */}
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((item) => {
-              const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                  className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
                     isActive
                       ? "bg-white/15 text-[#D4AF37] shadow-inner font-semibold"
                       : "text-slate-200 hover:bg-white/10 hover:text-white"
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
                   {item.name}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Desktop Auth / Dashboard CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop Auth CTA - Single Clean "Login" Button (Teacher Portal button removed) */}
+          <div className="hidden lg:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-2.5">
                 <Link
                   href={user.role === "ADMIN" ? "/admin" : "/teacher"}
-                  className="flex items-center gap-2 bg-[#D4AF37] text-[#111C32] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#c49f2c] transition shadow"
+                  className="flex items-center gap-2 bg-[#D4AF37] text-[#0D1B3D] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-400 transition shadow"
                 >
                   <LayoutDashboard className="w-4 h-4" />
-                  {user.role === "ADMIN" ? "Admin Panel" : "Teacher Panel"}
+                  <span>Dashboard</span>
                 </Link>
+                <div className="flex items-center gap-2 pl-2 border-l border-white/20 text-xs text-slate-300">
+                  <User className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span className="font-medium truncate max-w-[120px]">{user.name}</span>
+                </div>
                 <button
                   onClick={handleLogout}
                   title="Log out"
@@ -117,29 +121,29 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-4 py-2 rounded-lg text-sm font-medium transition"
+                className="flex items-center gap-2 bg-white text-[#0D1B3D] hover:bg-slate-100 px-5 py-2 rounded-lg text-sm font-semibold transition shadow-sm"
               >
-                <LogIn className="w-4 h-4 text-[#D4AF37]" />
-                <span>Staff Login</span>
+                <LogIn className="w-4 h-4 text-[#0D1B3D]" />
+                <span>Login</span>
               </Link>
             )}
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile Menu Controls */}
+          <div className="flex lg:hidden items-center gap-2">
             {user ? (
               <Link
                 href={user.role === "ADMIN" ? "/admin" : "/teacher"}
-                className="text-xs bg-[#D4AF37] text-[#111C32] px-2.5 py-1.5 rounded font-bold"
+                className="text-xs bg-[#D4AF37] text-[#0D1B3D] px-3 py-1.5 rounded-lg font-bold"
               >
                 Dashboard
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="text-xs bg-white/10 text-slate-200 px-2.5 py-1.5 rounded font-medium border border-white/20"
+                className="text-xs bg-white text-[#0D1B3D] px-3.5 py-1.5 rounded-lg font-semibold shadow-sm"
               >
-                Staff
+                Login
               </Link>
             )}
             <button
@@ -153,39 +157,37 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown Drawer */}
+      {/* Mobile Navigation Drawer */}
       {isOpen && (
-        <div className="md:hidden bg-[#111C32] border-t border-slate-800 px-4 pt-3 pb-5 space-y-1.5 shadow-2xl">
+        <div className="lg:hidden bg-[#071026] border-t border-slate-800 px-4 pt-3 pb-6 space-y-1.5 shadow-2xl">
           {navLinks.map((item) => {
-            const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition ${
+                className={`block px-4 py-3 rounded-lg text-sm font-medium transition ${
                   isActive
                     ? "bg-white/15 text-[#D4AF37] font-semibold"
                     : "text-slate-200 hover:bg-white/5"
                 }`}
               >
-                <Icon className="w-5 h-5 text-[#D4AF37]" />
                 {item.name}
               </Link>
             );
           })}
 
-          <div className="pt-3 border-t border-slate-700/60 mt-2">
+          <div className="pt-3 border-t border-slate-800 mt-2">
             {user ? (
               <div className="space-y-2">
-                <div className="px-4 py-2 text-xs text-slate-400">
+                <div className="px-4 py-1 text-xs text-slate-400">
                   Signed in as <span className="text-white font-semibold">{user.name}</span> ({user.role})
                 </div>
                 <Link
                   href={user.role === "ADMIN" ? "/admin" : "/teacher"}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full bg-[#D4AF37] text-[#111C32] py-3 rounded-lg font-bold text-center text-sm shadow"
+                  className="flex items-center justify-center gap-2 w-full bg-[#D4AF37] text-[#0D1B3D] py-3 rounded-lg font-bold text-center text-sm shadow"
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   Open Dashboard
@@ -205,10 +207,10 @@ export default function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center gap-2 w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 py-3 rounded-lg font-medium text-sm"
+                className="flex items-center justify-center gap-2 w-full bg-white text-[#0D1B3D] py-3 rounded-lg font-semibold text-sm shadow"
               >
-                <LogIn className="w-4 h-4 text-[#D4AF37]" />
-                Teacher / Admin Login
+                <LogIn className="w-4 h-4 text-[#0D1B3D]" />
+                Login
               </Link>
             )}
           </div>

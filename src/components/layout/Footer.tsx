@@ -4,13 +4,13 @@ import { Phone, Mail, MapPin, Clock, ShieldCheck } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#111C32] text-slate-300 border-t-4 border-[#D4AF37] pt-12 pb-24 md:pb-12 print-hide">
+    <footer className="bg-[#0D1B3D] text-slate-300 border-t-4 border-[#D4AF37] pt-12 pb-24 md:pb-12 print-hide font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand & Mission */}
           <div className="md:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-white p-0.5 border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden">
+              <div className="w-12 h-12 rounded-full bg-white p-0.5 border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden shrink-0">
                 <Image
                   src="/images/school-logo.png"
                   alt="Nayab Grammar School"
@@ -20,47 +20,49 @@ export default function Footer() {
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-base leading-tight">NAYAB GRAMMAR SCHOOL</h3>
-                <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wider">Mirwah Campus</p>
+                <h3 className="text-white font-bold text-base leading-tight font-heading">NAYAB GRAMMAR SCHOOL</h3>
+                <p className="text-[#D4AF37] text-xs font-semibold tracking-wider">Mirwah · Sindh</p>
               </div>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Committed to academic excellence, moral discipline, and nurturing future leaders through holistic education in Mirwah.
             </p>
-            <div className="flex items-center gap-2 text-xs text-[#D4AF37]">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Registered & Recognized Institution</span>
+            <div className="text-xs text-[#D4AF37] font-semibold flex items-center gap-1.5">
+              <span>Learn · Grow · Succeed</span>
             </div>
           </div>
 
           {/* Quick Navigation */}
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-slate-700/80 pb-2">
-              Student & Parent Portal
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-white/10 pb-2 font-heading">
+              Quick Links
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/" className="hover:text-[#D4AF37] transition">Home & Search</Link>
+                <Link href="/" className="hover:text-[#D4AF37] transition">Home</Link>
               </li>
               <li>
-                <Link href="/results" className="hover:text-[#D4AF37] transition">Check Midterm Results</Link>
+                <Link href="/about" className="hover:text-[#D4AF37] transition">About Us</Link>
               </li>
               <li>
-                <Link href="/fees" className="hover:text-[#D4AF37] transition">Fee Status & Challan</Link>
+                <Link href="/academics" className="hover:text-[#D4AF37] transition">Academics & Curriculum</Link>
               </li>
               <li>
-                <Link href="/announcements" className="hover:text-[#D4AF37] transition">School Circulars & Holidays</Link>
+                <Link href="/admissions" className="hover:text-[#D4AF37] transition">Admissions 2025</Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-[#D4AF37] transition">Teacher & Admin Portal</Link>
+                <Link href="/results" className="hover:text-[#D4AF37] transition">Examination Marksheets</Link>
+              </li>
+              <li>
+                <Link href="/fees" className="hover:text-[#D4AF37] transition">Fee Vouchers</Link>
               </li>
             </ul>
           </div>
 
-          {/* Timings & Uniform */}
+          {/* Timings & Schedule */}
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-slate-700/80 pb-2">
-              School Hours & Schedule
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-white/10 pb-2 font-heading">
+              School Timings
             </h4>
             <div className="space-y-2.5 text-xs text-slate-300">
               <div className="flex items-start gap-2">
@@ -78,38 +80,46 @@ export default function Footer() {
                 </div>
               </div>
               <p className="text-[11px] text-slate-400 pt-1">
-                Accounts Office: 8:30 AM – 1:00 PM
+                Biometric Gate Arrival Cut-off: 8:15 AM
               </p>
             </div>
           </div>
 
           {/* Contact Details */}
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-slate-700/80 pb-2">
-              Contact & Location
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-white/10 pb-2 font-heading">
+              Contact Us
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                <span>Main Campus, City Road, Mirwah, Sindh, Pakistan</span>
+                <span>Main Bypass Road, Mirwah, Sindh, Pakistan</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#D4AF37] shrink-0" />
-                <span>+92 301 2345670 / +92 312 9876543</span>
+                <span>+92 (0243) 720191</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#D4AF37] shrink-0" />
                 <span>info@nayab.edu.pk</span>
+              </li>
+              <li className="pt-2">
+                <Link
+                  href="/login"
+                  className="inline-block bg-white/10 hover:bg-white/20 text-white text-xs px-3.5 py-1.5 rounded-lg font-medium border border-white/20 transition"
+                >
+                  Staff Login Portal →
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom copyright */}
-        <div className="pt-6 border-t border-slate-800 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div className="pt-6 border-t border-white/10 text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p>© {new Date().getFullYear()} Nayab Grammar School, Mirwah. All rights reserved.</p>
-          <p className="text-slate-400">
-            Final Year Capstone Project — Production School Management Web Application
+          <p className="text-slate-500">
+            Learn · Grow · Succeed
           </p>
         </div>
       </div>

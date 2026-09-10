@@ -12,11 +12,11 @@ export default function BottomNav() {
     { name: "Results", href: "/results", icon: FileText },
     { name: "Fees", href: "/fees", icon: CreditCard },
     { name: "Notices", href: "/announcements", icon: Bell },
-    { name: "Portal", href: "/login", icon: User },
+    { name: "Login", href: "/login", icon: User },
   ];
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#1B2A4A] border-t border-[#D4AF37]/40 shadow-2xl print-hide">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0D1B3D] border-t border-[#D4AF37]/40 shadow-2xl print-hide">
       <nav className="flex items-center justify-around px-2 py-1.5 safe-area-bottom">
         {tabs.map((tab) => {
           const Icon = tab.icon;

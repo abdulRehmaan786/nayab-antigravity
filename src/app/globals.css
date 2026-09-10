@@ -1,32 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --primary-navy: #1B2A4A;
-  --primary-navy-dark: #111C32;
-  --primary-navy-light: #283D6A;
+  --primary-navy: #0D1B3D;
+  --primary-navy-dark: #071026;
+  --secondary-blue: #1E3A8A;
   --accent-gold: #D4AF37;
   --accent-gold-hover: #BF9B27;
   --accent-gold-light: #FBF8EE;
-  --bg-page: #F8F9FB;
-  --card-bg: #FFFFFF;
-  --text-main: #1F2937;
+  --success-green: #22C55E;
+  --warning-orange: #F59E0B;
+  --danger-red: #EF4444;
+  --light-gray: #F2F4F7;
+  --text-dark: #111827;
   --text-muted: #6B7280;
   --border-color: #E5E7EB;
 
-  --status-paid: #16A34A;
-  --status-pending: #D97706;
-  --status-unpaid: #DC2626;
+  --status-paid: #22C55E;
+  --status-pending: #F59E0B;
+  --status-unpaid: #EF4444;
 }
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--light-gray);
+  color: var(--text-dark);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar for data tables */
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -67,7 +74,7 @@ body {
 
   .printable-card {
     box-shadow: none !important;
-    border: 1px solid #1B2A4A !important;
+    border: 1px solid #0D1B3D !important;
     border-radius: 0 !important;
     padding: 24px !important;
     margin: 0 auto !important;

@@ -8,32 +8,34 @@ generator client {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  name            String
-  email           String   @unique
-  password        String
-  role            String   // "ADMIN" | "TEACHER"
-  assignedClasses String?  // JSON string: ["Class 8", "Class 9", "Class 10"]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  password         String
+  role             String   // "ADMIN" | "TEACHER"
+  assignedClasses  String?  // JSON string: ["Class 8", "Class 9", "Class 10"]
+  assignedSubjects String?  // JSON string: [{"className": "Class 9", "subject": "General Science"}, ...]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Student {
-  id          String       @id @default(uuid())
-  rollNumber  String       // e.g. "101"
+  id          String             @id @default(uuid())
+  rollNumber  String             // e.g. "101"
   name        String
   fatherName  String
-  className   String       // e.g. "Class 8", "Class 9", "Class 10"
-  section     String       @default("A")
-  gender      String       // "Male" | "Female"
+  className   String             // e.g. "Class 8", "Class 9", "Class 10"
+  section     String             @default("A")
+  gender      String             // "Male" | "Female"
   phone       String?
   dateOfBirth String?
   address     String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   results     ExamResult[]
   fees        FeeRecord[]
+  attendances AttendanceRecord[]
 
   @@unique([className, rollNumber])
 }
@@ -69,6 +71,22 @@ model FeeRecord {
   notes         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model AttendanceRecord {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  date        String   // e.g. "2025-09-10" (YYYY-MM-DD)
+  status      String   // "PRESENT" | "LATE" | "ABSENT" | "LEAVE"
+  checkInTime String?  // e.g. "07:52 AM"
+  deviceType  String   @default("BIOMETRIC_FINGERPRINT") // "BIOMETRIC_FINGERPRINT" | "RFID_CARD" | "MANUAL"
+  deviceId    String?  @default("BIO-GATE-01")
+  remarks     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([studentId, date])
 }
 
 model Announcement {

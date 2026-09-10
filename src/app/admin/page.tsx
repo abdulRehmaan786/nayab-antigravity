@@ -1,12 +1,35 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
-import { Users, CreditCard, Award, Bell, Plus, ArrowRight, CheckCircle2, Clock, XCircle } from "lucide-react";
+import {
+  Users,
+  CreditCard,
+  Award,
+  Bell,
+  Plus,
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  GraduationCap,
+  Fingerprint,
+} from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 async function getAdminMetrics() {
-  const [studentsCount, resultsCount, paidFees, pendingFees, unpaidFees, recentStudents, recentFees] = await Promise.all([
+  const [
+    studentsCount,
+    teachersCount,
+    resultsCount,
+    paidFees,
+    pendingFees,
+    unpaidFees,
+    attendanceStats,
+    recentStudents,
+    recentFees,
+  ] = await Promise.all([
     db.student.count(),
+    db.user.count({ where: { role: "TEACHER" } }),
     db.examResult.count(),
     db.feeRecord.aggregate({
       where: { status: "PAID" },
@@ -23,6 +46,9 @@ async function getAdminMetrics() {
       _sum: { amount: true },
       _count: true,
     }),
+    db.attendanceRecord.findMany({
+      where: { date: "2025-09-10" },
+    }),
     db.student.findMany({
       take: 5,
       orderBy: { createdAt: "desc" },
@@ -34,13 +60,22 @@ async function getAdminMetrics() {
     }),
   ]);
 
+  const presentCount = attendanceStats.filter((a) => a.status === "PRESENT").length;
+  const lateCount = attendanceStats.filter((a) => a.status === "LATE").length;
+  const attendanceRate =
+    studentsCount > 0 ? Math.round(((presentCount + lateCount) / studentsCount) * 100) : 0;
+
   return {
     studentsCount,
+    teachersCount,
     resultsCount,
     totalCollected: paidFees._sum.amount || 0,
     paidCount: paidFees._count || 0,
     totalPending: (pendingFees._sum.amount || 0) + (unpaidFees._sum.amount || 0),
     pendingCount: (pendingFees._count || 0) + (unpaidFees._count || 0),
+    attendanceRate,
+    presentCount,
+    lateCount,
     recentStudents,
     recentFees,
   };
@@ -62,71 +97,89 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/admin/attendance"
+            className="inline-flex items-center gap-1.5 bg-[#FCF9EE] border border-[#D4AF37] text-[#1B2A4A] px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#D4AF37] hover:text-[#111C32] transition shadow-xs"
+          >
+            <Fingerprint className="w-3.5 h-3.5 text-[#1B2A4A]" />
+            <span>Biometric Gate</span>
+          </Link>
+          <Link
+            href="/admin/teachers"
+            className="inline-flex items-center gap-1.5 bg-white border border-slate-300 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-slate-100 transition shadow-xs"
+          >
+            <GraduationCap className="w-3.5 h-3.5 text-[#1B2A4A]" />
+            <span>Teachers & Subjects</span>
+          </Link>
           <Link
             href="/admin/students"
-            className="inline-flex items-center gap-1.5 bg-[#1B2A4A] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#111C32] transition shadow"
+            className="inline-flex items-center gap-1.5 bg-[#1B2A4A] text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#111C32] transition shadow-xs"
           >
             <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>Add Student</span>
-          </Link>
-          <Link
-            href="/admin/announcements"
-            className="inline-flex items-center gap-1.5 bg-[#FCF9EE] border border-[#D4AF37] text-[#1B2A4A] px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-[#D4AF37] hover:text-[#111C32] transition"
-          >
-            <Bell className="w-3.5 h-3.5 text-[#1B2A4A]" />
-            <span>Post Notice</span>
           </Link>
         </div>
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-            <Users className="w-6 h-6" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+            <Users className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase">Total Students</p>
-            <h3 className="text-2xl font-black text-slate-900 mt-0.5">{data.studentsCount}</h3>
-            <p className="text-[11px] text-slate-400">Enrolled across all classes</p>
+            <p className="text-[10px] text-slate-500 font-bold uppercase">Total Students</p>
+            <h3 className="text-xl font-black text-slate-900 mt-0.5">{data.studentsCount}</h3>
+            <p className="text-[10px] text-slate-400">All classes enrolled</p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <CreditCard className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-[#FCF9EE] text-[#1B2A4A] border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
+            <Fingerprint className="w-5 h-5 text-[#D4AF37]" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase">Fee Collected</p>
-            <h3 className="text-2xl font-black text-emerald-700 mt-0.5">
+            <p className="text-[10px] text-slate-500 font-bold uppercase">Biometric Attendance</p>
+            <h3 className="text-xl font-black text-slate-900 mt-0.5">{data.attendanceRate}%</h3>
+            <p className="text-[10px] text-emerald-600 font-semibold">{data.presentCount} On-time, {data.lateCount} Late</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+            <CreditCard className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-bold uppercase">Fee Collected</p>
+            <h3 className="text-xl font-black text-emerald-700 mt-0.5">
               Rs. {data.totalCollected.toLocaleString()}
             </h3>
-            <p className="text-[11px] text-emerald-600 font-medium">{data.paidCount} Vouchers Cleared</p>
+            <p className="text-[10px] text-emerald-600 font-medium">{data.paidCount} Vouchers Paid</p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-            <Clock className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+            <Clock className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase">Pending Dues</p>
-            <h3 className="text-2xl font-black text-amber-700 mt-0.5">
+            <p className="text-[10px] text-slate-500 font-bold uppercase">Pending Dues</p>
+            <h3 className="text-xl font-black text-amber-700 mt-0.5">
               Rs. {data.totalPending.toLocaleString()}
             </h3>
-            <p className="text-[11px] text-amber-600 font-medium">{data.pendingCount} Outstanding Vouchers</p>
+            <p className="text-[10px] text-amber-600 font-medium">{data.pendingCount} Vouchers Pending</p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-            <Award className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+            <Award className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-semibold uppercase">Exam Marksheets</p>
-            <h3 className="text-2xl font-black text-purple-800 mt-0.5">{data.resultsCount}</h3>
-            <p className="text-[11px] text-purple-600 font-medium">Published online</p>
+            <p className="text-[10px] text-slate-500 font-bold uppercase">Subject Results</p>
+            <h3 className="text-xl font-black text-purple-800 mt-0.5">{data.resultsCount}</h3>
+            <p className="text-[10px] text-purple-600 font-medium">{data.teachersCount} Active Teachers</p>
           </div>
         </div>
       </div>

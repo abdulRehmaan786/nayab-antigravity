@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getCurrentSession } from "@/lib/auth";
-import { LayoutDashboard, FileSpreadsheet, Bell, LogOut, ArrowLeft, GraduationCap } from "lucide-react";
+import { LayoutDashboard, FileSpreadsheet, Bell, LogOut, ArrowLeft, GraduationCap, Fingerprint, BookOpen } from "lucide-react";
 
 export default async function TeacherLayout({
   children,
@@ -17,7 +17,8 @@ export default async function TeacherLayout({
 
   const navItems = [
     { name: "Teacher Overview", href: "/teacher", icon: LayoutDashboard },
-    { name: "Marks Entry Sheet", href: "/teacher/marks-entry", icon: FileSpreadsheet },
+    { name: "Subject Marks Entry", href: "/teacher/marks-entry", icon: FileSpreadsheet },
+    { name: "Biometric Attendance", href: "/teacher/attendance", icon: Fingerprint },
     { name: "Class Notices", href: "/teacher/notices", icon: Bell },
   ];
 
@@ -44,17 +45,28 @@ export default async function TeacherLayout({
             </div>
           </div>
 
-          <div className="mt-4 bg-white/5 p-2.5 rounded-xl border border-white/10 text-xs">
-            <p className="text-slate-400 text-[11px]">Instructor:</p>
-            <p className="font-bold text-white truncate">{session.name}</p>
-            <p className="text-[10px] text-slate-400 truncate">{session.email}</p>
-            {session.assignedClasses.length > 0 && (
-              <div className="mt-1.5 flex flex-wrap gap-1">
-                {session.assignedClasses.map((c) => (
-                  <span key={c} className="text-[9px] bg-[#D4AF37]/20 text-[#D4AF37] px-1.5 py-0.2 rounded font-bold">
-                    {c}
-                  </span>
-                ))}
+          <div className="mt-4 bg-white/5 p-3 rounded-xl border border-white/10 text-xs space-y-2">
+            <div>
+              <p className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Faculty Member</p>
+              <p className="font-bold text-white truncate text-sm">{session.name}</p>
+              <p className="text-[10px] text-slate-400 truncate">{session.email}</p>
+            </div>
+
+            {session.assignedSubjects && session.assignedSubjects.length > 0 && (
+              <div className="pt-2 border-t border-white/10">
+                <p className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider flex items-center gap-1 mb-1">
+                  <BookOpen className="w-3 h-3" /> Assigned Subjects
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {session.assignedSubjects.map((as, idx) => (
+                    <span
+                      key={idx}
+                      className="text-[9px] bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37] px-1.5 py-0.5 rounded font-bold"
+                    >
+                      {as.className}: {as.subject}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>

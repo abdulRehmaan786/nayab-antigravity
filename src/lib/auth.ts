@@ -25,6 +25,7 @@ export async function verifyAuthToken(token: string): Promise<AuthSession | null
       email: payload.email as string,
       role: payload.role as "ADMIN" | "TEACHER",
       assignedClasses: (payload.assignedClasses as string[]) || [],
+      assignedSubjects: (payload.assignedSubjects as any[]) || [],
     };
   } catch {
     return null;

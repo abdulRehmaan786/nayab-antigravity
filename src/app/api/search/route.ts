@@ -32,6 +32,10 @@ export async function GET(req: NextRequest) {
           orderBy: { createdAt: "desc" },
           take: 3,
         },
+        attendances: {
+          orderBy: { date: "desc" },
+          take: 30,
+        },
       },
     });
 
@@ -60,6 +64,36 @@ export async function GET(req: NextRequest) {
       };
     }
 
+    // Calculate Biometric Attendance Summary
+    const attendances = student.attendances || [];
+    const totalDays = attendances.length;
+    const presentDays = attendances.filter((a) => a.status === "PRESENT").length;
+    const lateDays = attendances.filter((a) => a.status === "LATE").length;
+    const absentDays = attendances.filter((a) => a.status === "ABSENT").length;
+    const leaveDays = attendances.filter((a) => a.status === "LEAVE").length;
+    const percentage =
+      totalDays > 0 ? Number((((presentDays + lateDays) / totalDays) * 100).toFixed(1)) : 100;
+
+    const latestPunch = attendances[0] || null;
+
+    const attendanceSummary = {
+      totalDays,
+      presentDays,
+      lateDays,
+      absentDays,
+      leaveDays,
+      percentage,
+      todayStatus: latestPunch
+        ? {
+            status: latestPunch.status,
+            checkInTime: latestPunch.checkInTime,
+            deviceId: latestPunch.deviceId,
+            deviceType: latestPunch.deviceType,
+            date: latestPunch.date,
+          }
+        : { status: "NOT_RECORDED" },
+    };
+
     // Also get active announcements
     const recentAnnouncements = await db.announcement.findMany({
       orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
@@ -82,6 +116,7 @@ export async function GET(req: NextRequest) {
       },
       latestResult,
       fees: student.fees,
+      attendanceSummary,
       recentAnnouncements,
     });
   } catch (error) {

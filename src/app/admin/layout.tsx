@@ -2,7 +2,18 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getCurrentSession } from "@/lib/auth";
-import { LayoutDashboard, Users, FileText, CreditCard, Bell, LogOut, ArrowLeft, ShieldCheck } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  CreditCard,
+  Bell,
+  LogOut,
+  ArrowLeft,
+  ShieldCheck,
+  GraduationCap,
+  Fingerprint,
+} from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -18,6 +29,8 @@ export default async function AdminLayout({
   const navItems = [
     { name: "Overview", href: "/admin", icon: LayoutDashboard },
     { name: "Students", href: "/admin/students", icon: Users },
+    { name: "Teachers & Subjects", href: "/admin/teachers", icon: GraduationCap },
+    { name: "Biometric Attendance", href: "/admin/attendance", icon: Fingerprint },
     { name: "Fee Register", href: "/admin/fees", icon: CreditCard },
     { name: "Exam Results", href: "/admin/results", icon: FileText },
     { name: "Announcements", href: "/admin/announcements", icon: Bell },

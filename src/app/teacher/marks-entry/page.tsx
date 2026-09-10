@@ -2,9 +2,16 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { FileSpreadsheet, Save, CheckCircle2, AlertCircle, RefreshCw, Sparkles, ExternalLink } from "lucide-react";
-import Link from "next/link";
+import { FileSpreadsheet, Save, CheckCircle2, RefreshCw, BookOpen, Lock, AlertCircle, Info } from "lucide-react";
 import { calculateGrade, calculateSubjectGrade } from "@/lib/grading";
+import { AuthSession } from "@/lib/types";
+
+interface OtherSubject {
+  subject: string;
+  maxMarks: number;
+  obtainedMarks: number;
+  grade: string;
+}
 
 interface StudentRow {
   studentId: string;
@@ -13,70 +20,136 @@ interface StudentRow {
   fatherName: string;
   className: string;
   section: string;
-  english: number;
-  urdu: number;
-  math: number;
-  science: number;
-  islamiyat: number;
-  pakStudies: number;
+  targetObtained: number;
+  targetMax: number;
   remarks: string;
+  otherSubjects: OtherSubject[];
   saved: boolean;
   saving: boolean;
 }
 
-const DEFAULT_SUBJECTS = [
+const ALL_SUBJECTS = [
+  { name: "General Science", max: 100 },
+  { name: "Physics", max: 100 },
+  { name: "Mathematics", max: 100 },
   { name: "English", max: 100 },
   { name: "Urdu", max: 100 },
-  { name: "Mathematics", max: 100 },
-  { name: "Science", max: 100 },
   { name: "Islamiyat", max: 50 },
-  { name: "Pak Studies", max: 50 },
+  { name: "Pakistan Studies", max: 50 },
 ];
 
 function MarksEntryContent() {
   const searchParams = useSearchParams();
-  const initialClass = searchParams.get("class") || "Class 9";
-  const [selectedClass, setSelectedClass] = useState(initialClass);
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [availableClasses, setAvailableClasses] = useState<string[]>([]);
+  const [availableSubjects, setAvailableSubjects] = useState<string[]>([]);
+
+  const [selectedClass, setSelectedClass] = useState("Class 9");
+  const [selectedSubject, setSelectedSubject] = useState("General Science");
   const [examTerm, setExamTerm] = useState("Midterm Examination 2025");
   const [academicYear, setAcademicYear] = useState("2024-2025");
+
   const [rows, setRows] = useState<StudentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [globalMessage, setGlobalMessage] = useState<string | null>(null);
 
+  // 1. Fetch Session & Determine Allowed Classes/Subjects
   useEffect(() => {
-    loadClassStudents();
-  }, [selectedClass, examTerm]);
+    fetch("/api/auth/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && data.authenticated) {
+          const userSession: AuthSession = data.user;
+          setSession(userSession);
+
+          if (userSession.role === "ADMIN") {
+            setAvailableClasses(["Class 10", "Class 9", "Class 8", "Class 7"]);
+            setAvailableSubjects(ALL_SUBJECTS.map((s) => s.name));
+          } else {
+            const assigned = userSession.assignedSubjects || [];
+            const uniqueClasses = Array.from(new Set(assigned.map((a) => a.className)));
+            setAvailableClasses(uniqueClasses.length > 0 ? uniqueClasses : userSession.assignedClasses);
+
+            const initialCls = uniqueClasses[0] || "Class 9";
+            setSelectedClass(initialCls);
+
+            const filteredSubs = assigned
+              .filter((a) => a.className.toLowerCase() === initialCls.toLowerCase())
+              .map((a) => a.subject);
+
+            const subList = filteredSubs.length > 0 ? filteredSubs : ["General Science"];
+            setAvailableSubjects(subList);
+            setSelectedSubject(subList[0]);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // 2. When Class changes, update available subjects for that teacher
+  const handleClassChange = (newCls: string) => {
+    setSelectedClass(newCls);
+    if (session && session.role !== "ADMIN") {
+      const assigned = session.assignedSubjects || [];
+      const filteredSubs = assigned
+        .filter((a) => a.className.toLowerCase() === newCls.toLowerCase())
+        .map((a) => a.subject);
+      const subList = filteredSubs.length > 0 ? filteredSubs : ["General Science"];
+      setAvailableSubjects(subList);
+      setSelectedSubject(subList[0]);
+    }
+  };
+
+  // 3. Load Students and their current exam results
+  useEffect(() => {
+    if (selectedClass && selectedSubject) {
+      loadClassStudents();
+    }
+  }, [selectedClass, selectedSubject, examTerm]);
 
   const loadClassStudents = async () => {
     setLoading(true);
     setGlobalMessage(null);
 
     try {
-      // 1. Fetch students in this class
+      // Fetch students in this class
       const sRes = await fetch(`/api/students?className=${encodeURIComponent(selectedClass)}`);
       const sData = await sRes.json();
       const studentsList = sData.students || [];
 
-      // 2. Fetch existing results for this class and examTerm
-      const rRes = await fetch(`/api/results?className=${encodeURIComponent(selectedClass)}&examTerm=${encodeURIComponent(examTerm)}`);
+      // Fetch existing results for this class and examTerm
+      const rRes = await fetch(
+        `/api/results?className=${encodeURIComponent(selectedClass)}&examTerm=${encodeURIComponent(examTerm)}`
+      );
       const rData = await rRes.json();
       const existingResults = rData.results || [];
 
-      const initialRows: StudentRow[] = studentsList.map((s: { id: string; rollNumber: string; name: string; fatherName: string; className: string; section: string }) => {
-        const found = existingResults.find((r: { studentId: string }) => r.studentId === s.id);
-        let eng = 0, urd = 0, mth = 0, sci = 0, isl = 0, pak = 0, rem = "";
+      const targetSubjectConfig =
+        ALL_SUBJECTS.find((s) => s.name.toLowerCase() === selectedSubject.toLowerCase()) || {
+          name: selectedSubject,
+          max: selectedSubject.includes("Islam") || selectedSubject.includes("Pak") ? 50 : 100,
+        };
 
-        if (found && Array.isArray(found.subjectMarks)) {
-          found.subjectMarks.forEach((sub: { subject: string; obtainedMarks: number }) => {
-            const name = sub.subject.toLowerCase();
-            if (name.includes("english")) eng = sub.obtainedMarks;
-            else if (name.includes("urdu")) urd = sub.obtainedMarks;
-            else if (name.includes("math")) mth = sub.obtainedMarks;
-            else if (name.includes("sci") || name.includes("phys")) sci = sub.obtainedMarks;
-            else if (name.includes("islam")) isl = sub.obtainedMarks;
-            else if (name.includes("pak") || name.includes("social")) pak = sub.obtainedMarks;
+      const initialRows: StudentRow[] = studentsList.map((s: { id: string; rollNumber: string; name: string; fatherName: string; className: string; section: string }) => {
+        const foundResult = existingResults.find((r: { studentId: string }) => r.studentId === s.id);
+        let targetObtained = 0;
+        let remarks = "";
+        let otherSubjects: OtherSubject[] = [];
+
+        if (foundResult && Array.isArray(foundResult.subjectMarks)) {
+          foundResult.subjectMarks.forEach((sub: { subject: string; maxMarks: number; obtainedMarks: number; grade: string }) => {
+            if (sub.subject.toLowerCase() === selectedSubject.toLowerCase()) {
+              targetObtained = sub.obtainedMarks;
+            } else {
+              otherSubjects.push({
+                subject: sub.subject,
+                maxMarks: sub.maxMarks,
+                obtainedMarks: sub.obtainedMarks,
+                grade: sub.grade,
+              });
+            }
           });
-          rem = found.remarks || "";
+          remarks = foundResult.remarks || "";
         }
 
         return {
@@ -86,14 +159,11 @@ function MarksEntryContent() {
           fatherName: s.fatherName,
           className: s.className,
           section: s.section,
-          english: eng,
-          urdu: urd,
-          math: mth,
-          science: sci,
-          islamiyat: isl,
-          pakStudies: pak,
-          remarks: rem,
-          saved: !!found,
+          targetObtained,
+          targetMax: targetSubjectConfig.max,
+          remarks,
+          otherSubjects,
+          saved: !!foundResult,
           saving: false,
         };
       });
@@ -106,49 +176,36 @@ function MarksEntryContent() {
     }
   };
 
-  const handleFieldChange = (studentId: string, field: keyof StudentRow, value: string | number) => {
+  const handleScoreChange = (studentId: string, val: number) => {
     setRows((prev) =>
-      prev.map((row) => {
-        if (row.studentId === studentId) {
-          return {
-            ...row,
-            [field]: value,
-            saved: false,
-          };
-        }
-        return row;
-      })
+      prev.map((r) => (r.studentId === studentId ? { ...r, targetObtained: val, saved: false } : r))
     );
   };
 
-  const calculateRowMetrics = (row: StudentRow) => {
-    const totalMax = 500;
-    const obtained =
-      Number(row.english || 0) +
-      Number(row.urdu || 0) +
-      Number(row.math || 0) +
-      Number(row.science || 0) +
-      Number(row.islamiyat || 0) +
-      Number(row.pakStudies || 0);
-
-    const percentage = Number(((obtained / totalMax) * 100).toFixed(1));
-    const { grade, isPass } = calculateGrade(percentage);
-
-    return { totalMax, obtained, percentage, grade, isPass };
+  const handleRemarksChange = (studentId: string, val: string) => {
+    setRows((prev) =>
+      prev.map((r) => (r.studentId === studentId ? { ...r, remarks: val, saved: false } : r))
+    );
   };
 
-  const handleSaveRow = async (row: StudentRow) => {
-    // Set saving state
-    setRows((prev) => prev.map((r) => (r.studentId === row.studentId ? { ...r, saving: true } : r)));
+  // Computes cumulative total, percentage, overall grade considering other teachers' subjects + current subject
+  const calculateRowTotal = (row: StudentRow) => {
+    const otherMax = row.otherSubjects.reduce((sum, o) => sum + o.maxMarks, 0);
+    const otherObtained = row.otherSubjects.reduce((sum, o) => sum + o.obtainedMarks, 0);
 
-    const subjects = [
-      { subject: "English", maxMarks: 100, obtainedMarks: Number(row.english) || 0 },
-      { subject: "Urdu", maxMarks: 100, obtainedMarks: Number(row.urdu) || 0 },
-      { subject: "Mathematics", maxMarks: 100, obtainedMarks: Number(row.math) || 0 },
-      { subject: "General Science", maxMarks: 100, obtainedMarks: Number(row.science) || 0 },
-      { subject: "Islamiyat", maxMarks: 50, obtainedMarks: Number(row.islamiyat) || 0 },
-      { subject: "Pakistan Studies", maxMarks: 50, obtainedMarks: Number(row.pakStudies) || 0 },
-    ];
+    const grandMax = otherMax + row.targetMax;
+    const grandObtained = otherObtained + Number(row.targetObtained || 0);
+
+    const percentage = grandMax > 0 ? Number(((grandObtained / grandMax) * 100).toFixed(1)) : 0;
+    const { grade, isPass } = calculateGrade(percentage);
+
+    const subjectGrade = calculateSubjectGrade(row.targetObtained, row.targetMax);
+
+    return { grandMax, grandObtained, percentage, grade, isPass, subjectGrade };
+  };
+
+  const handleSaveStudent = async (row: StudentRow) => {
+    setRows((prev) => prev.map((r) => (r.studentId === row.studentId ? { ...r, saving: true } : r)));
 
     try {
       const res = await fetch("/api/results", {
@@ -158,8 +215,15 @@ function MarksEntryContent() {
           studentId: row.studentId,
           examTerm,
           academicYear,
-          subjects,
-          remarks: row.remarks || "Progress verified by class teacher.",
+          targetSubject: selectedSubject,
+          subjects: [
+            {
+              subject: selectedSubject,
+              maxMarks: row.targetMax,
+              obtainedMarks: Number(row.targetObtained) || 0,
+            },
+          ],
+          remarks: row.remarks || `Marks recorded for ${selectedSubject}`,
         }),
       });
 
@@ -179,11 +243,11 @@ function MarksEntryContent() {
   };
 
   const handleSaveAll = async () => {
-    setGlobalMessage("Saving all student mark sheets...");
+    setGlobalMessage(`Saving all students for ${selectedSubject}...`);
     for (const row of rows) {
-      await handleSaveRow(row);
+      await handleSaveStudent(row);
     }
-    setGlobalMessage("All student marks successfully saved and published online!");
+    setGlobalMessage(`All ${selectedSubject} marks successfully merged and published!`);
     setTimeout(() => setGlobalMessage(null), 4000);
   };
 
@@ -192,12 +256,17 @@ function MarksEntryContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
+          <div className="inline-flex items-center gap-2 bg-[#FCF9EE] border border-[#D4AF37] px-3 py-0.5 rounded-full text-xs font-bold text-[#1B2A4A] mb-1.5">
+            <Lock className="w-3 h-3 text-[#D4AF37]" />
+            <span>Subject-Teacher Isolated Grading</span>
+          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
             <FileSpreadsheet className="w-6 h-6 text-[#1B2A4A]" />
-            <span>Interactive Marks Entry Sheet</span>
+            <span>Marks Entry Sheet — {selectedSubject}</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Input subject marks per student. Total, percentage, and letter grades (A+, A, B, C, F) auto-calculate in real time.
+            You are authorized to enter marks for <strong className="text-slate-800">{selectedSubject}</strong> in{" "}
+            <strong className="text-slate-800">{selectedClass}</strong>. Marks are safely merged without overwriting other subject teachers&apos; scores.
           </p>
         </div>
 
@@ -207,7 +276,7 @@ function MarksEntryContent() {
           className="inline-flex items-center gap-2 bg-[#1B2A4A] hover:bg-[#111C32] text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md transition disabled:opacity-50"
         >
           <Save className="w-4 h-4 text-[#D4AF37]" />
-          <span>Save & Publish All Marks</span>
+          <span>Save All {selectedSubject} Marks</span>
         </button>
       </div>
 
@@ -218,25 +287,46 @@ function MarksEntryContent() {
         </div>
       )}
 
-      {/* Class & Exam Selectors Toolbar */}
+      {/* Selectors Toolbar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
+          {/* Class Select */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Class</label>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Assigned Class</label>
             <select
               value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
+              onChange={(e) => handleClassChange(e.target.value)}
               className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
             >
-              <option value="Class 10">Class 10</option>
-              <option value="Class 9">Class 9</option>
-              <option value="Class 8">Class 8</option>
-              <option value="Class 7">Class 7</option>
+              {availableClasses.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Subject Select */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Examination Term</label>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1 flex items-center gap-1">
+              <BookOpen className="w-3 h-3 text-[#D4AF37]" /> Assigned Subject
+            </label>
+            <select
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+              className="bg-[#FCF9EE] border border-[#D4AF37] rounded-xl px-3 py-1.5 text-xs font-bold text-[#1B2A4A] focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            >
+              {availableSubjects.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Exam Term */}
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Exam Term</label>
             <select
               value={examTerm}
               onChange={(e) => setExamTerm(e.target.value)}
@@ -246,16 +336,6 @@ function MarksEntryContent() {
               <option value="Annual Examination 2025">Annual Examination 2025</option>
               <option value="First Term Test 2025">First Term Test 2025</option>
             </select>
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Academic Year</label>
-            <input
-              type="text"
-              value={academicYear}
-              onChange={(e) => setAcademicYear(e.target.value)}
-              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 w-28 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
-            />
           </div>
         </div>
 
@@ -268,15 +348,15 @@ function MarksEntryContent() {
         </button>
       </div>
 
-      {/* Spreadsheet Marks Entry Table */}
+      {/* Spreadsheet Marks Table */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-16 text-center text-xs text-slate-500">
-            Loading students and grade sheets for {selectedClass}...
+            Loading students for {selectedClass} — {selectedSubject}...
           </div>
         ) : rows.length === 0 ? (
           <div className="p-16 text-center text-slate-500 text-xs">
-            No students found in {selectedClass}. Add students from the Admin directory first.
+            No students found in {selectedClass}.
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -285,23 +365,23 @@ function MarksEntryContent() {
                 <tr className="bg-[#1B2A4A] text-white">
                   <th className="p-3 font-bold sticky left-0 bg-[#1B2A4A] z-10">Roll #</th>
                   <th className="p-3 font-bold sticky left-14 bg-[#1B2A4A] z-10">Student</th>
-                  <th className="p-3 font-bold text-center">English (100)</th>
-                  <th className="p-3 font-bold text-center">Urdu (100)</th>
-                  <th className="p-3 font-bold text-center">Math (100)</th>
-                  <th className="p-3 font-bold text-center">Science (100)</th>
-                  <th className="p-3 font-bold text-center">Islamiyat (50)</th>
-                  <th className="p-3 font-bold text-center">Pak St (50)</th>
-                  <th className="p-3 font-bold text-center bg-[#111C32]">Total (500)</th>
-                  <th className="p-3 font-bold text-center bg-[#111C32]">Percent %</th>
-                  <th className="p-3 font-bold text-center bg-[#111C32]">Grade</th>
-                  <th className="p-3 font-bold text-center">Status</th>
+                  <th className="p-3 font-bold text-center bg-[#253966] text-[#D4AF37]">
+                    {selectedSubject} (Max: {rows[0]?.targetMax || 100})
+                  </th>
+                  <th className="p-3 font-bold text-center">Subject Grade</th>
+                  <th className="p-3 font-bold">Other Subjects (Read-Only Preview)</th>
+                  <th className="p-3 font-bold text-center bg-[#111C32]">Grand Total</th>
+                  <th className="p-3 font-bold text-center bg-[#111C32]">Cumulative %</th>
+                  <th className="p-3 font-bold text-center bg-[#111C32]">Overall Grade</th>
                   <th className="p-3 font-bold">Teacher Remarks</th>
                   <th className="p-3 font-bold text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {rows.map((row, idx) => {
-                  const { obtained, percentage, grade, isPass } = calculateRowMetrics(row);
+                  const { grandMax, grandObtained, percentage, grade, isPass, subjectGrade } =
+                    calculateRowTotal(row);
+
                   return (
                     <tr
                       key={row.studentId}
@@ -322,90 +402,68 @@ function MarksEntryContent() {
                         </span>
                       </td>
 
-                      {/* English */}
-                      <td className="p-2 text-center">
+                      {/* Editable Target Subject Input */}
+                      <td className="p-2 text-center bg-[#FCF9EE]/60 border-x border-[#D4AF37]/30">
                         <input
                           type="number"
                           min="0"
-                          max="100"
-                          value={row.english}
-                          onChange={(e) => handleFieldChange(row.studentId, "english", Number(e.target.value))}
-                          className="w-16 h-8 text-center bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A] text-xs"
+                          max={row.targetMax}
+                          value={row.targetObtained}
+                          onChange={(e) => handleScoreChange(row.studentId, Number(e.target.value))}
+                          className="w-20 h-9 text-center bg-white border-2 border-[#D4AF37] rounded-xl font-extrabold text-base text-[#1B2A4A] focus:ring-2 focus:ring-[#1B2A4A] shadow-inner"
                         />
                       </td>
 
-                      {/* Urdu */}
+                      {/* Subject Grade Pill */}
                       <td className="p-2 text-center">
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={row.urdu}
-                          onChange={(e) => handleFieldChange(row.studentId, "urdu", Number(e.target.value))}
-                          className="w-16 h-8 text-center bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A] text-xs"
-                        />
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded text-[11px] font-black ${
+                            subjectGrade === "A+"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : subjectGrade === "A"
+                              ? "bg-blue-100 text-blue-800"
+                              : subjectGrade === "B"
+                              ? "bg-amber-100 text-amber-800"
+                              : subjectGrade === "C"
+                              ? "bg-orange-100 text-orange-800"
+                              : "bg-rose-100 text-rose-800"
+                          }`}
+                        >
+                          {subjectGrade}
+                        </span>
                       </td>
 
-                      {/* Math */}
-                      <td className="p-2 text-center">
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={row.math}
-                          onChange={(e) => handleFieldChange(row.studentId, "math", Number(e.target.value))}
-                          className="w-16 h-8 text-center bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A] text-xs"
-                        />
+                      {/* Other Teachers' Subjects Preview (Read Only) */}
+                      <td className="p-2.5 max-w-[260px]">
+                        {row.otherSubjects.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {row.otherSubjects.map((o) => (
+                              <span
+                                key={o.subject}
+                                title={`${o.subject}: ${o.obtainedMarks}/${o.maxMarks} (Grade ${o.grade})`}
+                                className="text-[10px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded border border-slate-200 font-medium"
+                              >
+                                {o.subject}: <strong>{o.obtainedMarks}</strong>
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 italic">No other subject marks yet</span>
+                        )}
                       </td>
 
-                      {/* Science */}
-                      <td className="p-2 text-center">
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={row.science}
-                          onChange={(e) => handleFieldChange(row.studentId, "science", Number(e.target.value))}
-                          className="w-16 h-8 text-center bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A] text-xs"
-                        />
+                      {/* Cumulative Grand Total */}
+                      <td className="p-2.5 text-center font-black text-slate-900 bg-slate-100/60">
+                        {grandObtained} / {grandMax}
                       </td>
 
-                      {/* Islamiyat */}
-                      <td className="p-2 text-center">
-                        <input
-                          type="number"
-                          min="0"
-                          max="50"
-                          value={row.islamiyat}
-                          onChange={(e) => handleFieldChange(row.studentId, "islamiyat", Number(e.target.value))}
-                          className="w-14 h-8 text-center bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A] text-xs"
-                        />
-                      </td>
-
-                      {/* Pak Studies */}
-                      <td className="p-2 text-center">
-                        <input
-                          type="number"
-                          min="0"
-                          max="50"
-                          value={row.pakStudies}
-                          onChange={(e) => handleFieldChange(row.studentId, "pakStudies", Number(e.target.value))}
-                          className="w-14 h-8 text-center bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A] text-xs"
-                        />
-                      </td>
-
-                      {/* Live Calculated Total */}
-                      <td className="p-2.5 text-center font-black text-slate-900 bg-slate-100/70">
-                        {obtained}
-                      </td>
-
-                      {/* Live Calculated Percentage */}
-                      <td className="p-2.5 text-center font-mono font-bold text-[#1B2A4A] bg-slate-100/70">
+                      {/* Cumulative Percentage */}
+                      <td className="p-2.5 text-center font-mono font-bold text-[#1B2A4A] bg-slate-100/60">
                         {percentage}%
                       </td>
 
-                      {/* Live Calculated Grade */}
-                      <td className="p-2.5 text-center bg-slate-100/70">
+                      {/* Overall Grade */}
+                      <td className="p-2.5 text-center bg-slate-100/60">
                         <span
                           className={`inline-block px-2 py-0.5 rounded text-[11px] font-black ${
                             grade === "A+"
@@ -419,38 +477,25 @@ function MarksEntryContent() {
                               : "bg-rose-100 text-rose-800"
                           }`}
                         >
-                          {grade}
+                          {grade} ({isPass ? "PASS" : "FAIL"})
                         </span>
                       </td>
 
-                      {/* Pass / Fail */}
-                      <td className="p-2.5 text-center">
-                        {isPass ? (
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
-                            PASS
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded">
-                            FAIL
-                          </span>
-                        )}
-                      </td>
-
                       {/* Remarks */}
-                      <td className="p-2 min-w-[160px]">
+                      <td className="p-2 min-w-[150px]">
                         <input
                           type="text"
                           value={row.remarks}
-                          onChange={(e) => handleFieldChange(row.studentId, "remarks", e.target.value)}
-                          placeholder="e.g. Outstanding analytical effort"
+                          onChange={(e) => handleRemarksChange(row.studentId, e.target.value)}
+                          placeholder="Teacher feedback..."
                           className="w-full h-8 px-2.5 bg-slate-50 border border-slate-300 rounded-lg text-[11px] text-slate-800 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                         />
                       </td>
 
-                      {/* Actions */}
+                      {/* Action */}
                       <td className="p-2 text-right whitespace-nowrap">
                         <button
-                          onClick={() => handleSaveRow(row)}
+                          onClick={() => handleSaveStudent(row)}
                           disabled={row.saving}
                           className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-bold transition shadow-xs ${
                             row.saved
@@ -477,7 +522,7 @@ function MarksEntryContent() {
 export default function TeacherMarksEntryPage() {
   return (
     <Suspense
-      fallback={<div className="p-12 text-center text-slate-500">Loading Marks Sheet...</div>}
+      fallback={<div className="p-12 text-center text-slate-500">Loading Subject Marks Sheet...</div>}
     >
       <MarksEntryContent />
     </Suspense>

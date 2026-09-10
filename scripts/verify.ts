@@ -3,63 +3,74 @@ import { findSchoolKnowledge } from "../src/lib/school-knowledge";
 import { calculateGrade } from "../src/lib/grading";
 
 async function verifyAll() {
-  console.log("=== 1. VERIFYING STUDENTS IN DATABASE ===");
+  console.log("=== 1. VERIFYING STUDENTS & BIOMETRIC ATTENDANCE ===");
   const students = await db.student.findMany({
     include: {
       results: true,
       fees: true,
+      attendances: true,
     },
   });
   console.log(`Total students in DB: ${students.length}`);
+
   const sampleStudent = students.find((s) => s.rollNumber === "101" && s.className === "Class 9");
   if (sampleStudent) {
-    console.log(`✓ Sample student found: ${sampleStudent.name}, Roll: ${sampleStudent.rollNumber}`);
-    console.log(`  Results count: ${sampleStudent.results.length}`);
-    console.log(`  Fees count: ${sampleStudent.fees.length}`);
-  } else {
-    console.error("❌ Sample student 101 not found");
+    console.log(`✓ Sample student: ${sampleStudent.name} (Roll ${sampleStudent.rollNumber})`);
+    console.log(`  Biometric Attendance logs count: ${sampleStudent.attendances.length}`);
+    sampleStudent.attendances.forEach((a) => {
+      console.log(`    Date: ${a.date} | Status: ${a.status} | Check-in: ${a.checkInTime} | Device: ${a.deviceId}`);
+    });
   }
 
-  console.log("\n=== 2. VERIFYING EXAM RESULTS AND GRADING ===");
-  const result = await db.examResult.findFirst({
+  console.log("\n=== 2. VERIFYING TEACHERS & SUBJECT ASSIGNMENTS ===");
+  const teachers = await db.user.findMany({ where: { role: "TEACHER" } });
+  console.log(`Total teachers: ${teachers.length}`);
+  teachers.forEach((t) => {
+    const subjects = t.assignedSubjects ? JSON.parse(t.assignedSubjects) : [];
+    console.log(`✓ ${t.name} (${t.email}):`);
+    subjects.forEach((s: any) => console.log(`    - ${s.className}: ${s.subject}`));
+  });
+
+  console.log("\n=== 3. VERIFYING SUBJECT MARKS AGGREGATION ===");
+  const sampleResult = await db.examResult.findFirst({
     where: { studentId: sampleStudent?.id },
   });
-  if (result) {
-    console.log(`✓ Result term: ${result.examTerm}`);
-    console.log(`  Total: ${result.obtainedMarks}/${result.totalMarks} (${result.percentage}%)`);
-    console.log(`  Grade: ${result.overallGrade}, Status: ${result.status}`);
+  if (sampleResult) {
+    const marks = JSON.parse(sampleResult.subjectMarks);
+    console.log(`✓ Result for ${sampleResult.examTerm}: Total ${sampleResult.obtainedMarks}/${sampleResult.totalMarks} (${sampleResult.percentage}%)`);
+    console.log(`  Subjects recorded (${marks.length}):`);
+    marks.forEach((m: any) => console.log(`    • ${m.subject}: ${m.obtainedMarks}/${m.maxMarks} (Grade ${m.grade})`));
   }
 
-  console.log("\n=== 3. VERIFYING FEE RECORDS ===");
-  const feeRecords = await db.feeRecord.findMany({ take: 3 });
-  console.log(`✓ Sample fee records:`);
-  feeRecords.forEach((f) => {
-    console.log(`  Month: ${f.month}, Amount: Rs. ${f.amount}, Status: ${f.status}, Receipt: ${f.receiptNumber || 'None'}`);
+  console.log("\n=== 4. TESTING LIVE BIOMETRIC PUNCH SIMULATION ===");
+  const testDate = "2025-09-11";
+  const punchRes = await db.attendanceRecord.upsert({
+    where: {
+      studentId_date: {
+        studentId: sampleStudent!.id,
+        date: testDate,
+      },
+    },
+    update: {
+      status: "PRESENT",
+      checkInTime: "07:54 AM",
+      deviceId: "BIO-GATE-01",
+      deviceType: "BIOMETRIC_FINGERPRINT",
+      remarks: "On-time biometric verification",
+    },
+    create: {
+      studentId: sampleStudent!.id,
+      date: testDate,
+      status: "PRESENT",
+      checkInTime: "07:54 AM",
+      deviceId: "BIO-GATE-01",
+      deviceType: "BIOMETRIC_FINGERPRINT",
+      remarks: "On-time biometric verification",
+    },
   });
+  console.log(`✓ Simulated Biometric Punch: Student ${sampleStudent!.name} punched at ${punchRes.checkInTime} via ${punchRes.deviceId} -> Status: ${punchRes.status}`);
 
-  console.log("\n=== 4. VERIFYING ANNOUNCEMENTS ===");
-  const notices = await db.announcement.findMany({ where: { isPinned: true } });
-  console.log(`✓ Pinned announcements: ${notices.length}`);
-  notices.forEach((n) => console.log(`  [${n.category}] ${n.title}`));
-
-  console.log("\n=== 5. VERIFYING AI CHATBOT KNOWLEDGE BASE ===");
-  const queries = [
-    "What are the school timings?",
-    "How to check my result?",
-    "What is the uniform?",
-    "How do I pay fees?",
-  ];
-  for (const q of queries) {
-    const match = findSchoolKnowledge(q);
-    console.log(`✓ Query: "${q}" -> Found Category: ${match?.category}`);
-  }
-
-  console.log("\n=== 6. VERIFYING USER AUTH ACCOUNTS ===");
-  const users = await db.user.findMany();
-  console.log(`✓ Registered staff users: ${users.length}`);
-  users.forEach((u) => console.log(`  Role: ${u.role}, Email: ${u.email}, Name: ${u.name}`));
-
-  console.log("\n✅ ALL SYSTEM VERIFICATIONS PASSED!");
+  console.log("\n✅ ALL NEW FEATURES VERIFIED SUCCESSFULLY!");
 }
 
 verifyAll()

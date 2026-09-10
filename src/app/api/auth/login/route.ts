@@ -42,12 +42,22 @@ export async function POST(req: NextRequest) {
       assignedClasses = [];
     }
 
+    let assignedSubjects: any[] = [];
+    try {
+      if (user.assignedSubjects) {
+        assignedSubjects = JSON.parse(user.assignedSubjects);
+      }
+    } catch {
+      assignedSubjects = [];
+    }
+
     const sessionPayload = {
       userId: user.id,
       name: user.name,
       email: user.email,
       role: user.role as "ADMIN" | "TEACHER",
       assignedClasses,
+      assignedSubjects,
     };
 
     const token = await createAuthToken(sessionPayload);

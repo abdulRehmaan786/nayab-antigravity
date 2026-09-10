@@ -8,6 +8,40 @@ export interface SubjectMark {
   remarks?: string;
 }
 
+export interface TeacherSubjectAssignment {
+  className: string;
+  subject: string;
+  maxMarks?: number;
+}
+
+export interface AttendanceRecordData {
+  id: string;
+  studentId: string;
+  student?: StudentData;
+  date: string;
+  status: "PRESENT" | "LATE" | "ABSENT" | "LEAVE";
+  checkInTime?: string | null;
+  deviceType: "BIOMETRIC_FINGERPRINT" | "RFID_CARD" | "MANUAL" | string;
+  deviceId?: string | null;
+  remarks?: string | null;
+  createdAt: string | Date;
+}
+
+export interface AttendanceSummary {
+  totalDays: number;
+  presentDays: number;
+  lateDays: number;
+  absentDays: number;
+  leaveDays: number;
+  percentage: number;
+  todayStatus?: {
+    status: "PRESENT" | "LATE" | "ABSENT" | "LEAVE" | "NOT_RECORDED";
+    checkInTime?: string | null;
+    deviceId?: string | null;
+    deviceType?: string | null;
+  };
+}
+
 export interface StudentData {
   id: string;
   rollNumber: string;
@@ -19,6 +53,7 @@ export interface StudentData {
   phone?: string | null;
   dateOfBirth?: string | null;
   address?: string | null;
+  attendances?: AttendanceRecordData[];
 }
 
 export interface ExamResultData {
@@ -67,4 +102,5 @@ export interface AuthSession {
   email: string;
   role: "ADMIN" | "TEACHER";
   assignedClasses: string[];
+  assignedSubjects: TeacherSubjectAssignment[];
 }

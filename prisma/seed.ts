@@ -5,13 +5,14 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Clearing old data...");
+  await prisma.attendanceRecord.deleteMany();
   await prisma.feeRecord.deleteMany();
   await prisma.examResult.deleteMany();
   await prisma.student.deleteMany();
   await prisma.announcement.deleteMany();
   await prisma.user.deleteMany();
 
-  console.log("👤 Creating Admin and Teacher accounts...");
+  console.log("👤 Creating Admin and Teacher accounts with assigned subjects...");
   const adminPassword = await bcrypt.hash("Admin@123", 10);
   const teacherPassword = await bcrypt.hash("Teacher@123", 10);
 
@@ -22,6 +23,11 @@ async function main() {
       password: adminPassword,
       role: "ADMIN",
       assignedClasses: JSON.stringify(["All Classes"]),
+      assignedSubjects: JSON.stringify([
+        { className: "Class 10", subject: "All Subjects" },
+        { className: "Class 9", subject: "All Subjects" },
+        { className: "Class 8", subject: "All Subjects" },
+      ]),
     },
   });
 
@@ -32,6 +38,11 @@ async function main() {
       password: teacherPassword,
       role: "TEACHER",
       assignedClasses: JSON.stringify(["Class 8", "Class 9", "Class 10"]),
+      assignedSubjects: JSON.stringify([
+        { className: "Class 9", subject: "General Science" },
+        { className: "Class 8", subject: "General Science" },
+        { className: "Class 10", subject: "Physics" },
+      ]),
     },
   });
 
@@ -42,6 +53,25 @@ async function main() {
       password: teacherPassword,
       role: "TEACHER",
       assignedClasses: JSON.stringify(["Class 9", "Class 10"]),
+      assignedSubjects: JSON.stringify([
+        { className: "Class 9", subject: "Mathematics" },
+        { className: "Class 10", subject: "Mathematics" },
+      ]),
+    },
+  });
+
+  const teacher3 = await prisma.user.create({
+    data: {
+      name: "Sir Rashid Ali (English)",
+      email: "teacher.english@nayab.edu.pk",
+      password: teacherPassword,
+      role: "TEACHER",
+      assignedClasses: JSON.stringify(["Class 8", "Class 9", "Class 10"]),
+      assignedSubjects: JSON.stringify([
+        { className: "Class 9", subject: "English" },
+        { className: "Class 10", subject: "English" },
+        { className: "Class 8", subject: "English" },
+      ]),
     },
   });
 
@@ -238,7 +268,6 @@ async function main() {
 
   console.log("💰 Creating Fee Records...");
   const feeConfigs = [
-    // Class 9
     { roll: "101", class: "Class 9", status: "PAID", paidDate: "02 Sep 2025", receipt: "NGS-REC-2025-0914" },
     { roll: "102", class: "Class 9", status: "PAID", paidDate: "04 Sep 2025", receipt: "NGS-REC-2025-0925" },
     { roll: "103", class: "Class 9", status: "PENDING", paidDate: null, receipt: null },
@@ -246,14 +275,12 @@ async function main() {
     { roll: "105", class: "Class 9", status: "UNPAID", paidDate: null, receipt: null },
     { roll: "106", class: "Class 9", status: "PENDING", paidDate: null, receipt: null },
 
-    // Class 10
     { roll: "201", class: "Class 10", status: "PAID", paidDate: "03 Sep 2025", receipt: "NGS-REC-2025-0918" },
     { roll: "202", class: "Class 10", status: "PENDING", paidDate: null, receipt: null },
     { roll: "203", class: "Class 10", status: "UNPAID", paidDate: null, receipt: null },
     { roll: "204", class: "Class 10", status: "PAID", paidDate: "05 Sep 2025", receipt: "NGS-REC-2025-0931" },
     { roll: "205", class: "Class 10", status: "PAID", paidDate: "06 Sep 2025", receipt: "NGS-REC-2025-0940" },
 
-    // Class 8
     { roll: "301", class: "Class 8", status: "PAID", paidDate: "02 Sep 2025", receipt: "NGS-REC-2025-0910" },
     { roll: "302", class: "Class 8", status: "PENDING", paidDate: null, receipt: null },
     { roll: "303", class: "Class 8", status: "PAID", paidDate: "05 Sep 2025", receipt: "NGS-REC-2025-0935" },
@@ -263,7 +290,6 @@ async function main() {
     const student = createdStudents.find((s) => s.rollNumber === fc.roll && s.className === fc.class);
     if (!student) continue;
 
-    // September 2025 record
     await prisma.feeRecord.create({
       data: {
         studentId: student.id,
@@ -277,7 +303,6 @@ async function main() {
       },
     });
 
-    // Also an August 2025 paid record for realistic fee history
     await prisma.feeRecord.create({
       data: {
         studentId: student.id,
@@ -290,6 +315,48 @@ async function main() {
         notes: "Monthly Tuition Fee",
       },
     });
+  }
+
+  console.log("📲 Seeding Biometric Attendance Logs...");
+  const recentDates = ["2025-09-08", "2025-09-09", "2025-09-10"];
+
+  for (const dateStr of recentDates) {
+    for (const student of createdStudents) {
+      let status = "PRESENT";
+      let checkInTime: string | null = "07:52 AM";
+      let remarks = "On-time biometric verification";
+
+      // Create realistic variation
+      if (student.rollNumber === "105" && dateStr === "2025-09-10") {
+        status = "LATE";
+        checkInTime = "08:24 AM";
+        remarks = "Late arrival (Traffic delay)";
+      } else if (student.rollNumber === "106" && dateStr === "2025-09-09") {
+        status = "ABSENT";
+        checkInTime = null;
+        remarks = "Unexcused absence";
+      } else if (student.rollNumber === "203" && dateStr === "2025-09-08") {
+        status = "LEAVE";
+        checkInTime = null;
+        remarks = "Sick leave approved by administration";
+      } else if (student.rollNumber === "201") {
+        checkInTime = "07:45 AM";
+      } else if (student.rollNumber === "101") {
+        checkInTime = "07:48 AM";
+      }
+
+      await prisma.attendanceRecord.create({
+        data: {
+          studentId: student.id,
+          date: dateStr,
+          status,
+          checkInTime,
+          deviceType: "BIOMETRIC_FINGERPRINT",
+          deviceId: student.rollNumber.startsWith("2") ? "BIO-GATE-02" : "BIO-GATE-01",
+          remarks,
+        },
+      });
+    }
   }
 
   console.log("📣 Publishing School Announcements...");
@@ -348,7 +415,9 @@ async function main() {
   console.log("✅ Database seeding complete!");
   console.log("Demo Credentials:");
   console.log("  Admin:   admin@nayab.edu.pk | Admin@123");
-  console.log("  Teacher: teacher.science@nayab.edu.pk | Teacher@123");
+  console.log("  Science: teacher.science@nayab.edu.pk | Teacher@123");
+  console.log("  Math:    teacher.math@nayab.edu.pk | Teacher@123");
+  console.log("  English: teacher.english@nayab.edu.pk | Teacher@123");
 }
 
 main()

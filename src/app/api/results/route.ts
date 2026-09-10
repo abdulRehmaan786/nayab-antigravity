@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { studentId, examTerm, academicYear, subjects, remarks } = body;
+    const { studentId, examTerm, academicYear, subjects, remarks, targetSubject } = body;
 
     if (!studentId || !examTerm || !Array.isArray(subjects) || subjects.length === 0) {
       return NextResponse.json(
@@ -62,8 +62,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Process subjects with individual grades
-    const processedSubjects = subjects.map((sub: { subject: string; maxMarks: number; obtainedMarks: number; remarks?: string }) => {
+    // Verify student exists
+    const student = await db.student.findUnique({
+      where: { id: studentId },
+    });
+
+    if (!student) {
+      return NextResponse.json({ error: "Student not found." }, { status: 404 });
+    }
+
+    // Check teacher permission for this subject
+    if (session.role === "TEACHER" && targetSubject) {
+      const isAllowed = session.assignedSubjects?.some(
+        (as) =>
+          as.className.toLowerCase() === student.className.toLowerCase() &&
+          (as.subject.toLowerCase() === targetSubject.toLowerCase() || as.subject.toLowerCase() === "all subjects")
+      );
+
+      if (!isAllowed) {
+        return NextResponse.json(
+          {
+            error: `Access denied. You are not assigned to grade "${targetSubject}" for ${student.className}.`,
+          },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Process incoming subject marks
+    const processedIncoming = subjects.map((sub: { subject: string; maxMarks: number; obtainedMarks: number; remarks?: string }) => {
       const max = Number(sub.maxMarks) || 100;
       const obtained = Number(sub.obtainedMarks) || 0;
       const grade = calculateSubjectGrade(obtained, max);
@@ -76,13 +103,6 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    const totalMarks = processedSubjects.reduce((sum: number, s: { maxMarks: number }) => sum + s.maxMarks, 0);
-    const obtainedMarks = processedSubjects.reduce((sum: number, s: { obtainedMarks: number }) => sum + s.obtainedMarks, 0);
-    const percentage = totalMarks > 0 ? Number(((obtainedMarks / totalMarks) * 100).toFixed(1)) : 0;
-
-    const { grade: overallGrade, isPass } = calculateGrade(percentage);
-    const status = isPass ? "PASS" : "FAIL";
-
     // Check if result already exists for this student and exam term
     const existing = await db.examResult.findFirst({
       where: {
@@ -91,13 +111,45 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    let mergedSubjects: Array<{ subject: string; maxMarks: number; obtainedMarks: number; grade: string; remarks: string }> = [];
+
+    if (existing) {
+      try {
+        mergedSubjects = JSON.parse(existing.subjectMarks);
+      } catch {
+        mergedSubjects = [];
+      }
+
+      // Merge incoming subject marks into existing, replacing only the subjects being submitted
+      for (const inc of processedIncoming) {
+        const existingIdx = mergedSubjects.findIndex(
+          (m) => m.subject.toLowerCase() === inc.subject.toLowerCase()
+        );
+        if (existingIdx >= 0) {
+          mergedSubjects[existingIdx] = inc;
+        } else {
+          mergedSubjects.push(inc);
+        }
+      }
+    } else {
+      mergedSubjects = processedIncoming;
+    }
+
+    // Compute grand total, percentage, overall grade, and pass/fail across all merged subjects
+    const totalMarks = mergedSubjects.reduce((sum, s) => sum + s.maxMarks, 0);
+    const obtainedMarks = mergedSubjects.reduce((sum, s) => sum + s.obtainedMarks, 0);
+    const percentage = totalMarks > 0 ? Number(((obtainedMarks / totalMarks) * 100).toFixed(1)) : 0;
+
+    const { grade: overallGrade, isPass } = calculateGrade(percentage);
+    const status = isPass ? "PASS" : "FAIL";
+
     let savedResult;
     if (existing) {
       savedResult = await db.examResult.update({
         where: { id: existing.id },
         data: {
-          academicYear: academicYear || "2024-2025",
-          subjectMarks: JSON.stringify(processedSubjects),
+          academicYear: academicYear || existing.academicYear || "2024-2025",
+          subjectMarks: JSON.stringify(mergedSubjects),
           totalMarks,
           obtainedMarks,
           percentage,
@@ -113,13 +165,13 @@ export async function POST(req: NextRequest) {
           studentId,
           examTerm,
           academicYear: academicYear || "2024-2025",
-          subjectMarks: JSON.stringify(processedSubjects),
+          subjectMarks: JSON.stringify(mergedSubjects),
           totalMarks,
           obtainedMarks,
           percentage,
           overallGrade,
           status,
-          remarks: remarks || "Result verified by examination committee.",
+          remarks: remarks || "Result verified by subject teacher.",
         },
       });
     }
@@ -128,8 +180,9 @@ export async function POST(req: NextRequest) {
       ok: true,
       result: {
         ...savedResult,
-        subjectMarks: processedSubjects,
+        subjectMarks: mergedSubjects,
       },
+      updatedSubject: targetSubject || null,
     });
   } catch (error) {
     console.error("Save result error:", error);

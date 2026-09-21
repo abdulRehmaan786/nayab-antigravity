@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getCurrentSession } from "@/lib/auth";
-import { LayoutDashboard, FileSpreadsheet, Bell, LogOut, ArrowLeft, GraduationCap, Fingerprint, BookOpen } from "lucide-react";
+import { LayoutDashboard, FileSpreadsheet, Bell, LogOut, ArrowLeft, GraduationCap, Calendar, BookOpen } from "lucide-react";
 
 export default async function TeacherLayout({
   children,
@@ -18,7 +18,7 @@ export default async function TeacherLayout({
   const navItems = [
     { name: "Teacher Overview", href: "/teacher", icon: LayoutDashboard },
     { name: "Subject Marks Entry", href: "/teacher/marks-entry", icon: FileSpreadsheet },
-    { name: "Biometric Attendance", href: "/teacher/attendance", icon: Fingerprint },
+    { name: "My Attendance Calendar", href: "/teacher/attendance", icon: Calendar },
     { name: "Class Notices", href: "/teacher/notices", icon: Bell },
   ];
 

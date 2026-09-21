@@ -469,15 +469,27 @@ async function main() {
     });
   }
 
-  console.log("📋 Seeding Staff Attendance...");
-  const staffDates = ["2025-09-08", "2025-09-09", "2025-09-10"];
+  console.log("📋 Seeding Staff Attendance across September...");
+  const staffDates = [
+    "2025-09-01", "2025-09-02", "2025-09-03", "2025-09-04", "2025-09-05", "2025-09-06",
+    "2025-09-08", "2025-09-09", "2025-09-10", "2025-09-11", "2025-09-12", "2025-09-13",
+    "2025-09-15", "2025-09-16", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-20"
+  ];
   for (const dateStr of staffDates) {
     for (const staff of createdStaff) {
       let status = "PRESENT";
       let checkInTime: string | null = "07:30 AM";
       let remarks = "On-time arrival";
       
-      if (staff.name === "Yaqoob Khan" && dateStr === "2025-09-10") {
+      if (staff.name.includes("Tariq") && dateStr === "2025-09-05") {
+        status = "LATE";
+        checkInTime = "08:10 AM";
+        remarks = "Traffic delay at Mirwah chowk";
+      } else if (staff.name.includes("Tariq") && dateStr === "2025-09-12") {
+        status = "LEAVE";
+        checkInTime = null;
+        remarks = "Casual leave approved";
+      } else if (staff.name === "Yaqoob Khan" && dateStr === "2025-09-10") {
         status = "LATE";
         checkInTime = "08:15 AM";
         remarks = "Late arrival";

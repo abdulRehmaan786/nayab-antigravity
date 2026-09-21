@@ -176,8 +176,8 @@ export default async function TeacherOverviewPage() {
                 href="/teacher/attendance"
                 className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-[#0D1B3D] hover:text-white group transition text-xs font-semibold text-slate-700"
               >
-                <Fingerprint className="w-4 h-4 text-[#22C55E] group-hover:text-white" />
-                <span>Mark Attendance</span>
+                <Calendar className="w-4 h-4 text-[#22C55E] group-hover:text-white" />
+                <span>My Attendance Calendar</span>
               </Link>
 
               <Link

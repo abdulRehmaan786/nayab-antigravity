@@ -90,7 +90,7 @@ export default function AcademicsPage() {
           <div>
             <h3 className="text-lg font-bold text-[#D4AF37] font-heading">Check Student Academic Performance</h3>
             <p className="text-xs sm:text-sm text-slate-300 mt-1">
-              Verify monthly test and midterm marks directly from the public roll number search.
+              Verify weekly test marks directly from the public roll number search.
             </p>
           </div>
           <Link

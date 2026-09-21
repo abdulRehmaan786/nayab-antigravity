@@ -45,6 +45,7 @@ export interface AttendanceSummary {
 export interface StudentData {
   id: string;
   rollNumber: string;
+  grNumber?: string | null;
   name: string;
   fatherName: string;
   className: string;
@@ -54,6 +55,44 @@ export interface StudentData {
   dateOfBirth?: string | null;
   address?: string | null;
   attendances?: AttendanceRecordData[];
+}
+
+export interface StaffMemberData {
+  id: string;
+  name: string;
+  role: "TEACHER" | "SAFAI_WALA" | "SECURITY_GUARD" | "PEON" | "CLERK" | "LAB_ASSISTANT" | string;
+  designation: string;
+  phone?: string | null;
+  cnic?: string | null;
+  monthlySalary: number;
+  userId?: string | null;
+  status: "ACTIVE" | "INACTIVE" | "ON_LEAVE" | string;
+  attendances?: StaffAttendanceData[];
+  salaries?: StaffSalaryData[];
+}
+
+export interface StaffAttendanceData {
+  id: string;
+  staffId: string;
+  date: string;
+  status: "PRESENT" | "LATE" | "ABSENT" | "LEAVE" | string;
+  checkInTime?: string | null;
+  remarks?: string | null;
+}
+
+export interface StaffSalaryData {
+  id: string;
+  staffId: string;
+  month: string;
+  basicSalary: number;
+  allowances: number;
+  deductions: number;
+  netSalary: number;
+  status: "PAID" | "PENDING" | "UNPAID" | string;
+  paidDate?: string | null;
+  paymentMethod?: string | null;
+  receiptNumber?: string | null;
+  notes?: string | null;
 }
 
 export interface ExamResultData {

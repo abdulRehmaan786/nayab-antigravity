@@ -34,6 +34,7 @@ export default function AdminStudentsPage() {
   const [modalError, setModalError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     rollNumber: "",
+    grNumber: "",
     name: "",
     fatherName: "",
     className: "Class 9",
@@ -82,6 +83,7 @@ export default function AdminStudentsPage() {
         setIsModalOpen(false);
         setFormData({
           rollNumber: "",
+          grNumber: "",
           name: "",
           fatherName: "",
           className: "Class 9",
@@ -117,7 +119,8 @@ export default function AdminStudentsPage() {
   const filtered = students.filter((s) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
-    return s.name.toLowerCase().includes(q) || s.rollNumber.toLowerCase().includes(q) || s.fatherName.toLowerCase().includes(q);
+    const gr = (s as StudentData & { grNumber?: string }).grNumber || "";
+    return s.name.toLowerCase().includes(q) || s.rollNumber.toLowerCase().includes(q) || s.fatherName.toLowerCase().includes(q) || gr.toLowerCase().includes(q);
   });
 
   return (
@@ -169,7 +172,7 @@ export default function AdminStudentsPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, roll no, father..."
+            placeholder="Search by name, roll no, GR no, father..."
             className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           />
         </div>
@@ -194,6 +197,7 @@ export default function AdminStudentsPage() {
               <thead>
                 <tr className="bg-[#1B2A4A] text-white">
                   <th className="p-3.5 font-bold">Roll #</th>
+                  <th className="p-3.5 font-bold">G.R. No.</th>
                   <th className="p-3.5 font-bold">Student Name</th>
                   <th className="p-3.5 font-bold">Father&apos;s Name</th>
                   <th className="p-3.5 font-bold">Class & Sec</th>
@@ -206,6 +210,7 @@ export default function AdminStudentsPage() {
                 {filtered.map((s, idx) => (
                   <tr key={s.id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
                     <td className="p-3.5 font-mono font-bold text-[#1B2A4A]">{s.rollNumber}</td>
+                    <td className="p-3.5 font-mono text-slate-500 text-[11px]">{(s as StudentData & { grNumber?: string }).grNumber || "—"}</td>
                     <td className="p-3.5 font-bold text-slate-900">{s.name}</td>
                     <td className="p-3.5 text-slate-600">{s.fatherName}</td>
                     <td className="p-3.5">
@@ -266,7 +271,7 @@ export default function AdminStudentsPage() {
             )}
 
             <form onSubmit={handleCreateStudent} className="space-y-3.5 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Class</label>
                   <select
@@ -287,9 +292,20 @@ export default function AdminStudentsPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. 107, 208"
+                    placeholder="e.g. 107"
                     value={formData.rollNumber}
                     onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">G.R. Number</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. GR-1015"
+                    value={formData.grNumber}
+                    onChange={(e) => setFormData({ ...formData, grNumber: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                   />
                 </div>

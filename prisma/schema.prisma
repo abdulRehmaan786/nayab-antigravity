@@ -22,6 +22,7 @@ model User {
 model Student {
   id          String             @id @default(uuid())
   rollNumber  String             // e.g. "101"
+  grNumber    String?            @unique
   name        String
   fatherName  String
   className   String             // e.g. "Class 8", "Class 9", "Class 10"
@@ -99,4 +100,55 @@ model Announcement {
   date        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model StaffMember {
+  id             String           @id @default(uuid())
+  name           String
+  role           String           // "TEACHER" | "SAFAI_WALA" | "SECURITY_GUARD" | "PEON" | "CLERK" | "LAB_ASSISTANT"
+  designation    String           // e.g. "Senior Science Teacher", "Campus Cleaner"
+  phone          String?
+  cnic           String?
+  monthlySalary  Float            @default(15000)
+  userId         String?          // Links to User if this is a teacher
+  status         String           @default("ACTIVE") // "ACTIVE" | "INACTIVE" | "ON_LEAVE"
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  
+  attendances    StaffAttendance[]
+  salaries       StaffSalary[]
+}
+
+model StaffAttendance {
+  id          String      @id @default(uuid())
+  staffId     String
+  staff       StaffMember @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  date        String      // "YYYY-MM-DD"
+  status      String      // "PRESENT" | "LATE" | "ABSENT" | "LEAVE"
+  checkInTime String?     // e.g. "07:52 AM"
+  remarks     String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([staffId, date])
+}
+
+model StaffSalary {
+  id            String      @id @default(uuid())
+  staffId       String
+  staff         StaffMember @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  month         String      // e.g. "September 2025"
+  basicSalary   Float
+  allowances    Float       @default(0)
+  deductions    Float       @default(0)
+  netSalary     Float
+  status        String      // "PAID" | "PENDING" | "UNPAID"
+  paidDate      String?
+  paymentMethod String?     // "CASH" | "BANK" | "EASYPAISA" | "RAAST"
+  receiptNumber String?
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([staffId, month])
 }

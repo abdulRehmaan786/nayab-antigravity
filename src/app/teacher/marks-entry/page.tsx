@@ -46,7 +46,7 @@ function MarksEntryContent() {
 
   const [selectedClass, setSelectedClass] = useState("Class 9");
   const [selectedSubject, setSelectedSubject] = useState("General Science");
-  const [examTerm, setExamTerm] = useState("Midterm Examination 2025");
+  const [examTerm, setExamTerm] = useState("Weekly Test 1 - 2025");
   const [academicYear, setAcademicYear] = useState("2024-2025");
 
   const [rows, setRows] = useState<StudentRow[]>([]);
@@ -326,15 +326,39 @@ function MarksEntryContent() {
 
           {/* Exam Term */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Exam Term</label>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Weekly Test / Exam</label>
             <select
               value={examTerm}
               onChange={(e) => setExamTerm(e.target.value)}
               className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
             >
-              <option value="Midterm Examination 2025">Midterm Examination 2025</option>
+              <option value="Weekly Test 1 - 2025">Weekly Test 1</option>
+              <option value="Weekly Test 2 - 2025">Weekly Test 2</option>
+              <option value="Weekly Test 3 - 2025">Weekly Test 3</option>
+              <option value="Weekly Test 4 - 2025">Weekly Test 4</option>
+              <option value="Weekly Test 5 - 2025">Weekly Test 5</option>
+              <option value="Weekly Test 6 - 2025">Weekly Test 6</option>
+              <option value="Weekly Test 7 - 2025">Weekly Test 7</option>
+              <option value="Weekly Test 8 - 2025">Weekly Test 8</option>
               <option value="Annual Examination 2025">Annual Examination 2025</option>
-              <option value="First Term Test 2025">First Term Test 2025</option>
+            </select>
+          </div>
+
+          {/* Max Marks Selector */}
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">Max Marks</label>
+            <select
+              value={rows[0]?.targetMax || 100}
+              onChange={(e) => {
+                const newMax = Number(e.target.value);
+                setRows((prev) => prev.map((r) => ({ ...r, targetMax: newMax })));
+              }}
+              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            >
+              <option value="20">20 Marks</option>
+              <option value="25">25 Marks</option>
+              <option value="50">50 Marks</option>
+              <option value="100">100 Marks</option>
             </select>
           </div>
         </div>

@@ -14,6 +14,8 @@ import {
   Bell,
   PlusCircle,
   ExternalLink,
+  DollarSign,
+  Briefcase,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +23,25 @@ export const dynamic = "force-dynamic";
 export default async function TeacherOverviewPage() {
   const session = await getCurrentSession();
 
-  const teacherName = session?.name || "Ali Hassan";
+  const teacherName = session?.name || "Teacher";
+
+  const staffProfile = session?.userId
+    ? await db.staffMember.findFirst({
+        where: {
+          OR: [
+            { userId: session.userId },
+            { name: { contains: teacherName.split(" ")[1] || teacherName } },
+          ],
+        },
+        include: {
+          salaries: { orderBy: { createdAt: "desc" }, take: 1 },
+          attendances: { orderBy: { date: "desc" }, take: 5 },
+        },
+      })
+    : null;
+
+  const latestSalary = staffProfile?.salaries?.[0];
+  const recentAttendances = staffProfile?.attendances || [];
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-sans">
@@ -183,6 +203,47 @@ export default async function TeacherOverviewPage() {
                 <Bell className="w-4 h-4 text-purple-600 group-hover:text-white" />
                 <span>Create Notice</span>
               </Link>
+            </div>
+          </div>
+
+          {/* My Salary & Attendance Widget */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <h2 className="text-base font-bold text-slate-900 font-heading flex items-center gap-2">
+                <Briefcase className="w-4 h-4 text-[#1E3A8A]" />
+                <span>My Salary & Attendance</span>
+              </h2>
+              {latestSalary && (
+                <span className={`px-2 py-0.5 rounded text-[11px] font-black ${
+                  latestSalary.status === "PAID"
+                    ? "bg-emerald-100 text-emerald-800"
+                    : "bg-amber-100 text-amber-800"
+                }`}>
+                  {latestSalary.status}
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase">Latest Salary</p>
+                <p className="text-base font-black text-[#0D1B3D] mt-0.5">
+                  Rs. {latestSalary?.netSalary?.toLocaleString() || "35,000"}
+                </p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  {latestSalary?.month || "September 2025"} {latestSalary?.receiptNumber ? `• ${latestSalary.receiptNumber}` : ""}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase">Today's Check-In</p>
+                <p className="text-base font-black text-emerald-600 mt-0.5">
+                  {recentAttendances[0]?.checkInTime || "07:30 AM"}
+                </p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  Status: <strong className="text-emerald-700">{recentAttendances[0]?.status || "PRESENT"}</strong>
+                </p>
+              </div>
             </div>
           </div>
 

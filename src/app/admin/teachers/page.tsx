@@ -437,10 +437,10 @@ export default function AdminTeachersPage() {
         </div>
       )}
 
-      {/* Add New Teacher Modal */}
+      {/* Add New Teacher Modal — Multi-Subject Assignment */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
               <h3 className="font-extrabold text-lg text-slate-900 flex items-center gap-2">
                 <GraduationCap className="w-5 h-5 text-[#1B2A4A]" />
@@ -458,7 +458,7 @@ export default function AdminTeachersPage() {
               </div>
             )}
 
-            <form onSubmit={handleCreateTeacher} className="space-y-3.5 text-xs">
+            <form onSubmit={handleCreateTeacher} className="space-y-4 text-xs">
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Teacher Full Name</label>
                 <input
@@ -495,43 +495,92 @@ export default function AdminTeachersPage() {
                 />
               </div>
 
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Initial Subject & Class</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <select
-                    value={createClasses[0] || "Class 9"}
-                    onChange={(e) => {
-                      const newCls = e.target.value;
-                      setCreateClasses([newCls]);
-                      setCreateSubjects([{ className: newCls, subject: createSubjects[0]?.subject || "General Science" }]);
-                    }}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium"
-                  >
-                    {AVAILABLE_CLASSES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
+              {/* Multi-Subject Assignment Matrix */}
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-3">
+                  Assign Classes & Subjects
+                </label>
 
-                  <select
-                    value={createSubjects[0]?.subject || "General Science"}
-                    onChange={(e) => {
-                      const newSub = e.target.value;
-                      setCreateSubjects([{ className: createClasses[0] || "Class 9", subject: newSub }]);
-                    }}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium"
-                  >
-                    {AVAILABLE_SUBJECTS.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
+                {/* Current Assignments Chips */}
+                {createSubjects.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {createSubjects.map((s, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1 bg-[#FCF9EE] border border-[#D4AF37] text-[#1B2A4A] px-2.5 py-1 rounded-lg font-bold text-[11px]"
+                      >
+                        <BookOpen className="w-3 h-3 text-[#D4AF37]" />
+                        <span>{s.className}: {s.subject}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = createSubjects.filter((_, i) => i !== idx);
+                            setCreateSubjects(updated);
+                            setCreateClasses(Array.from(new Set(updated.map((u) => u.className))));
+                          }}
+                          className="hover:text-rose-600 text-slate-400 ml-0.5"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
                     ))}
-                  </select>
+                  </div>
+                )}
+
+                {/* Add New Subject Row */}
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <label className="block text-[10px] text-slate-500 font-semibold mb-0.5">Class</label>
+                    <select
+                      id="create-new-class"
+                      defaultValue="Class 9"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-xs"
+                    >
+                      {AVAILABLE_CLASSES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-[10px] text-slate-500 font-semibold mb-0.5">Subject</label>
+                    <select
+                      id="create-new-subject"
+                      defaultValue="General Science"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-xs"
+                    >
+                      {AVAILABLE_SUBJECTS.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const clsEl = document.getElementById("create-new-class") as HTMLSelectElement;
+                      const subEl = document.getElementById("create-new-subject") as HTMLSelectElement;
+                      const cls = clsEl?.value || "Class 9";
+                      const sub = subEl?.value || "General Science";
+                      const exists = createSubjects.some(
+                        (s) => s.className === cls && s.subject === sub
+                      );
+                      if (!exists) {
+                        const updated = [...createSubjects, { className: cls, subject: sub }];
+                        setCreateSubjects(updated);
+                        setCreateClasses(Array.from(new Set(updated.map((u) => u.className))));
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 bg-[#1B2A4A] hover:bg-[#111C32] text-white px-3 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap"
+                  >
+                    <Plus className="w-3 h-3 text-[#D4AF37]" />
+                    <span>Add</span>
+                  </button>
                 </div>
-                <p className="text-[10px] text-slate-400 mt-1">
-                  You can assign multiple additional classes and subjects after creation.
-                </p>
+
+                {createSubjects.length === 0 && (
+                  <p className="text-[10px] text-slate-400 mt-2 italic">
+                    Add at least one class and subject assignment above.
+                  </p>
+                )}
               </div>
 
               <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">

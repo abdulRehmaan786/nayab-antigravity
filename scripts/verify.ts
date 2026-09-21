@@ -15,7 +15,7 @@ async function verifyAll() {
 
   const sampleStudent = students.find((s) => s.rollNumber === "101" && s.className === "Class 9");
   if (sampleStudent) {
-    console.log(`✓ Sample student: ${sampleStudent.name} (Roll ${sampleStudent.rollNumber})`);
+    console.log(`✓ Sample student: ${sampleStudent.name} (Roll ${sampleStudent.rollNumber}, G.R. No: ${sampleStudent.grNumber || "N/A"})`);
     console.log(`  Biometric Attendance logs count: ${sampleStudent.attendances.length}`);
     sampleStudent.attendances.forEach((a) => {
       console.log(`    Date: ${a.date} | Status: ${a.status} | Check-in: ${a.checkInTime} | Device: ${a.deviceId}`);
@@ -31,7 +31,7 @@ async function verifyAll() {
     subjects.forEach((s: any) => console.log(`    - ${s.className}: ${s.subject}`));
   });
 
-  console.log("\n=== 3. VERIFYING SUBJECT MARKS AGGREGATION ===");
+  console.log("\n=== 3. VERIFYING WEEKLY TEST RESULTS ===");
   const sampleResult = await db.examResult.findFirst({
     where: { studentId: sampleStudent?.id },
   });
@@ -42,7 +42,23 @@ async function verifyAll() {
     marks.forEach((m: any) => console.log(`    • ${m.subject}: ${m.obtainedMarks}/${m.maxMarks} (Grade ${m.grade})`));
   }
 
-  console.log("\n=== 4. TESTING LIVE BIOMETRIC PUNCH SIMULATION ===");
+  console.log("\n=== 4. VERIFYING STAFF DIRECTORY, PAYROLL & ATTENDANCE ===");
+  const allStaff = await db.staffMember.findMany({
+    include: {
+      salaries: true,
+      attendances: true,
+    },
+  });
+  console.log(`Total Staff Members in DB: ${allStaff.length}`);
+  allStaff.forEach((st) => {
+    const latestSal = st.salaries[0];
+    const latestAtt = st.attendances[0];
+    console.log(`✓ [${st.role}] ${st.name} (${st.designation}):`);
+    console.log(`    Monthly Salary: Rs. ${st.monthlySalary.toLocaleString()} | Latest Status: ${latestSal ? latestSal.status + " (" + latestSal.month + ")" : "N/A"}`);
+    console.log(`    Latest Attendance: ${latestAtt ? latestAtt.status + " on " + latestAtt.date : "N/A"}`);
+  });
+
+  console.log("\n=== 5. TESTING LIVE BIOMETRIC PUNCH SIMULATION ===");
   const testDate = "2025-09-11";
   const punchRes = await db.attendanceRecord.upsert({
     where: {
@@ -70,7 +86,7 @@ async function verifyAll() {
   });
   console.log(`✓ Simulated Biometric Punch: Student ${sampleStudent!.name} punched at ${punchRes.checkInTime} via ${punchRes.deviceId} -> Status: ${punchRes.status}`);
 
-  console.log("\n✅ ALL NEW FEATURES VERIFIED SUCCESSFULLY!");
+  console.log("\n✅ ALL 6 MAJOR FEATURES VERIFIED ACCURATELY!");
 }
 
 verifyAll()

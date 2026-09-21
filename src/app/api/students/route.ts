@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
       where.OR = [
         { name: { contains: query } },
         { rollNumber: { contains: query } },
+        { grNumber: { contains: query } },
         { fatherName: { contains: query } },
       ];
     }
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { rollNumber, name, fatherName, className, section, gender, phone, dateOfBirth, address } = body;
+    const { rollNumber, grNumber, name, fatherName, className, section, gender, phone, dateOfBirth, address } = body;
 
     if (!rollNumber || !name || !fatherName || !className) {
       return NextResponse.json(
@@ -73,6 +74,7 @@ export async function POST(req: NextRequest) {
     const student = await db.student.create({
       data: {
         rollNumber: String(rollNumber).trim(),
+        grNumber: grNumber ? String(grNumber).trim() : null,
         name: name.trim(),
         fatherName: fatherName.trim(),
         className: className.trim(),
@@ -99,7 +101,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, rollNumber, name, fatherName, className, section, gender, phone, dateOfBirth, address } = body;
+    const { id, rollNumber, grNumber, name, fatherName, className, section, gender, phone, dateOfBirth, address } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Student ID is required." }, { status: 400 });
@@ -109,6 +111,7 @@ export async function PUT(req: NextRequest) {
       where: { id },
       data: {
         rollNumber: String(rollNumber).trim(),
+        grNumber: grNumber ? String(grNumber).trim() : null,
         name: name.trim(),
         fatherName: fatherName.trim(),
         className: className.trim(),

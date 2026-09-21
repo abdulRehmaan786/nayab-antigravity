@@ -5,6 +5,9 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Clearing old data...");
+  await prisma.staffAttendance.deleteMany();
+  await prisma.staffSalary.deleteMany();
+  await prisma.staffMember.deleteMany();
   await prisma.attendanceRecord.deleteMany();
   await prisma.feeRecord.deleteMany();
   await prisma.examResult.deleteMany();
@@ -78,24 +81,24 @@ async function main() {
   console.log("🎓 Creating Students across classes...");
   const studentsData = [
     // Class 9
-    { rollNumber: "101", name: "Muhammad Ali", fatherName: "Tariq Mehmood", className: "Class 9", section: "A", gender: "Male", phone: "+92 301 2345671", dateOfBirth: "2010-04-15", address: "Main Bazaar, Mirwah" },
-    { rollNumber: "102", name: "Ayesha Khan", fatherName: "Imran Khan", className: "Class 9", section: "A", gender: "Female", phone: "+92 302 3456782", dateOfBirth: "2010-08-22", address: "Station Road, Mirwah" },
-    { rollNumber: "103", name: "Bilawal Bhutto", fatherName: "Zulfiqar Ali", className: "Class 9", section: "A", gender: "Male", phone: "+92 303 4567893", dateOfBirth: "2010-01-10", address: "Civil Hospital Road, Mirwah" },
-    { rollNumber: "104", name: "Fatima Zahra", fatherName: "Ghulam Mustafa", className: "Class 9", section: "A", gender: "Female", phone: "+92 304 5678904", dateOfBirth: "2010-11-05", address: "Model Colony, Mirwah" },
-    { rollNumber: "105", name: "Shahmeer Ali", fatherName: "Rashid Ahmed", className: "Class 9", section: "B", gender: "Male", phone: "+92 305 6789015", dateOfBirth: "2010-06-30", address: "Old City, Mirwah" },
-    { rollNumber: "106", name: "Dua Maryam", fatherName: "Naveed Iqbal", className: "Class 9", section: "B", gender: "Female", phone: "+92 306 7890126", dateOfBirth: "2010-09-18", address: "Canal Colony, Mirwah" },
+    { rollNumber: "101", grNumber: "GR-1001", name: "Muhammad Ali", fatherName: "Tariq Mehmood", className: "Class 9", section: "A", gender: "Male", phone: "+92 301 2345671", dateOfBirth: "2010-04-15", address: "Main Bazaar, Mirwah" },
+    { rollNumber: "102", grNumber: "GR-1002", name: "Ayesha Khan", fatherName: "Imran Khan", className: "Class 9", section: "A", gender: "Female", phone: "+92 302 3456782", dateOfBirth: "2010-08-22", address: "Station Road, Mirwah" },
+    { rollNumber: "103", grNumber: "GR-1003", name: "Bilawal Bhutto", fatherName: "Zulfiqar Ali", className: "Class 9", section: "A", gender: "Male", phone: "+92 303 4567893", dateOfBirth: "2010-01-10", address: "Civil Hospital Road, Mirwah" },
+    { rollNumber: "104", grNumber: "GR-1004", name: "Fatima Zahra", fatherName: "Ghulam Mustafa", className: "Class 9", section: "A", gender: "Female", phone: "+92 304 5678904", dateOfBirth: "2010-11-05", address: "Model Colony, Mirwah" },
+    { rollNumber: "105", grNumber: "GR-1005", name: "Shahmeer Ali", fatherName: "Rashid Ahmed", className: "Class 9", section: "B", gender: "Male", phone: "+92 305 6789015", dateOfBirth: "2010-06-30", address: "Old City, Mirwah" },
+    { rollNumber: "106", grNumber: "GR-1006", name: "Dua Maryam", fatherName: "Naveed Iqbal", className: "Class 9", section: "B", gender: "Female", phone: "+92 306 7890126", dateOfBirth: "2010-09-18", address: "Canal Colony, Mirwah" },
 
     // Class 10
-    { rollNumber: "201", name: "Hamza Farooq", fatherName: "Farooq Sattar", className: "Class 10", section: "A", gender: "Male", phone: "+92 307 8901237", dateOfBirth: "2009-03-12", address: "College Road, Mirwah" },
-    { rollNumber: "202", name: "Zainab Bibi", fatherName: "Abdul Rehman", className: "Class 10", section: "A", gender: "Female", phone: "+92 308 9012348", dateOfBirth: "2009-07-25", address: "Bazar Mohalla, Mirwah" },
-    { rollNumber: "203", name: "Usama Mir", fatherName: "Mir Muhammad", className: "Class 10", section: "A", gender: "Male", phone: "+92 309 0123459", dateOfBirth: "2009-12-04", address: "Grain Market, Mirwah" },
-    { rollNumber: "204", name: "Hania Amir", fatherName: "Amir Sohail", className: "Class 10", section: "A", gender: "Female", phone: "+92 310 1234560", dateOfBirth: "2009-05-19", address: "Green View, Mirwah" },
-    { rollNumber: "205", name: "Zeeshan Haider", fatherName: "Haider Abbas", className: "Class 10", section: "B", gender: "Male", phone: "+92 311 2345671", dateOfBirth: "2009-09-14", address: "Shahrah-e-Iqbal, Mirwah" },
+    { rollNumber: "201", grNumber: "GR-1007", name: "Hamza Farooq", fatherName: "Farooq Sattar", className: "Class 10", section: "A", gender: "Male", phone: "+92 307 8901237", dateOfBirth: "2009-03-12", address: "College Road, Mirwah" },
+    { rollNumber: "202", grNumber: "GR-1008", name: "Zainab Bibi", fatherName: "Abdul Rehman", className: "Class 10", section: "A", gender: "Female", phone: "+92 308 9012348", dateOfBirth: "2009-07-25", address: "Bazar Mohalla, Mirwah" },
+    { rollNumber: "203", grNumber: "GR-1009", name: "Usama Mir", fatherName: "Mir Muhammad", className: "Class 10", section: "A", gender: "Male", phone: "+92 309 0123459", dateOfBirth: "2009-12-04", address: "Grain Market, Mirwah" },
+    { rollNumber: "204", grNumber: "GR-1010", name: "Hania Amir", fatherName: "Amir Sohail", className: "Class 10", section: "A", gender: "Female", phone: "+92 310 1234560", dateOfBirth: "2009-05-19", address: "Green View, Mirwah" },
+    { rollNumber: "205", grNumber: "GR-1011", name: "Zeeshan Haider", fatherName: "Haider Abbas", className: "Class 10", section: "B", gender: "Male", phone: "+92 311 2345671", dateOfBirth: "2009-09-14", address: "Shahrah-e-Iqbal, Mirwah" },
 
     // Class 8
-    { rollNumber: "301", name: "Rayyan Ahmed", fatherName: "Ahmed Nawaz", className: "Class 8", section: "A", gender: "Male", phone: "+92 312 3456782", dateOfBirth: "2011-02-18", address: "Gulshan Colony, Mirwah" },
-    { rollNumber: "302", name: "Mahnoor Baloch", fatherName: "Akhtar Baloch", className: "Class 8", section: "A", gender: "Female", phone: "+92 313 4567893", dateOfBirth: "2011-10-29", address: "Railway Station Area, Mirwah" },
-    { rollNumber: "303", name: "Daniyal Raza", fatherName: "Raza Hussain", className: "Class 8", section: "A", gender: "Male", phone: "+92 314 5678904", dateOfBirth: "2011-06-08", address: "Post Office Chowk, Mirwah" },
+    { rollNumber: "301", grNumber: "GR-1012", name: "Rayyan Ahmed", fatherName: "Ahmed Nawaz", className: "Class 8", section: "A", gender: "Male", phone: "+92 312 3456782", dateOfBirth: "2011-02-18", address: "Gulshan Colony, Mirwah" },
+    { rollNumber: "302", grNumber: "GR-1013", name: "Mahnoor Baloch", fatherName: "Akhtar Baloch", className: "Class 8", section: "A", gender: "Female", phone: "+92 313 4567893", dateOfBirth: "2011-10-29", address: "Railway Station Area, Mirwah" },
+    { rollNumber: "303", grNumber: "GR-1014", name: "Daniyal Raza", fatherName: "Raza Hussain", className: "Class 8", section: "A", gender: "Male", phone: "+92 314 5678904", dateOfBirth: "2011-06-08", address: "Post Office Chowk, Mirwah" },
   ];
 
   const createdStudents = [];
@@ -253,7 +256,7 @@ async function main() {
     await prisma.examResult.create({
       data: {
         studentId: student.id,
-        examTerm: "Midterm Examination 2025",
+        examTerm: "Weekly Test 1 - 2025",
         academicYear: "2024-2025",
         subjectMarks: JSON.stringify(r.subjects),
         totalMarks,
@@ -371,9 +374,9 @@ async function main() {
       date: "September 03, 2025",
     },
     {
-      title: "Midterm Examination 2025 — Official Results Declared Online",
+      title: "Weekly Test 1 — Results Declared Online",
       content:
-        "The Midterm Examination results for classes Nursery through Class 10 have been finalized and published. Parents can check results immediately via the homepage Search portal by selecting Class and Roll Number. Official printed report cards with principal seal will be distributed during the upcoming Parent-Teacher Meeting.",
+        "The Weekly Test 1 results for classes Nursery through Class 10 have been finalized and published. Parents can check results immediately via the homepage Search portal by selecting Class and Roll Number. Official printed report cards with principal seal will be distributed during the upcoming Parent-Teacher Meeting.",
       category: "EXAM",
       isPinned: true,
       publishedBy: "Examination Controller",
@@ -400,7 +403,7 @@ async function main() {
     {
       title: "Monthly Parent-Teacher Meeting (PTM)",
       content:
-        "A mandatory Parent-Teacher Meeting will be held on Saturday, 20th September 2025 from 9:00 AM to 12:30 PM. Parents are encouraged to meet their children's subject teachers to review midterm performance and discuss areas for academic enhancement.",
+        "A mandatory Parent-Teacher Meeting will be held on Saturday, 20th September 2025 from 9:00 AM to 12:30 PM. Parents are encouraged to meet their children's subject teachers to review weekly test performance and discuss areas for academic enhancement.",
       category: "NOTICE",
       isPinned: false,
       publishedBy: "Academic Coordination Wing",
@@ -410,6 +413,90 @@ async function main() {
 
   for (const a of announcements) {
     await prisma.announcement.create({ data: a });
+  }
+
+  console.log("👨💼 Creating Staff Members...");
+  const staffData = [
+    { name: "Sir Tariq Mehmood", role: "TEACHER", designation: "Senior Science Teacher", phone: "+92 300 1111111", cnic: "44201-1234567-1", monthlySalary: 35000, userId: teacher1.id },
+    { name: "Madam Farzana Begum", role: "TEACHER", designation: "Mathematics Teacher", phone: "+92 300 2222222", cnic: "44201-2345678-2", monthlySalary: 32000, userId: teacher2.id },
+    { name: "Sir Rashid Ali", role: "TEACHER", designation: "English Teacher", phone: "+92 300 3333333", cnic: "44201-3456789-3", monthlySalary: 30000, userId: teacher3.id },
+    { name: "Babu Ram", role: "SAFAI_WALA", designation: "Campus Cleaner / Safai Wala", phone: "+92 300 4444444", cnic: "44201-4567890-4", monthlySalary: 15000 },
+    { name: "Yaqoob Khan", role: "SECURITY_GUARD", designation: "Security Guard / Chowkidar", phone: "+92 300 5555555", cnic: "44201-5678901-5", monthlySalary: 18000 },
+    { name: "Ghulam Nabi", role: "PEON", designation: "Office Peon", phone: "+92 300 6666666", cnic: "44201-6789012-6", monthlySalary: 14000 },
+  ];
+
+  const createdStaff = [];
+  for (const s of staffData) {
+    const staff = await prisma.staffMember.create({ data: s });
+    createdStaff.push(staff);
+  }
+
+  console.log("💵 Seeding Staff Salary Records...");
+  for (const staff of createdStaff) {
+    // September 2025 - varied statuses
+    const isPaid = ["Sir Tariq Mehmood", "Madam Farzana Begum", "Babu Ram"].includes(staff.name);
+    await prisma.staffSalary.create({
+      data: {
+        staffId: staff.id,
+        month: "September 2025",
+        basicSalary: staff.monthlySalary,
+        allowances: staff.role === "TEACHER" ? 3000 : 1000,
+        deductions: 0,
+        netSalary: staff.monthlySalary + (staff.role === "TEACHER" ? 3000 : 1000),
+        status: isPaid ? "PAID" : "PENDING",
+        paidDate: isPaid ? "05 Sep 2025" : null,
+        paymentMethod: isPaid ? "CASH" : null,
+        receiptNumber: isPaid ? `SAL-${staff.name.split(" ")[0].toUpperCase()}-SEP25` : null,
+        notes: "Monthly salary",
+      },
+    });
+
+    // August 2025 - all paid
+    await prisma.staffSalary.create({
+      data: {
+        staffId: staff.id,
+        month: "August 2025",
+        basicSalary: staff.monthlySalary,
+        allowances: staff.role === "TEACHER" ? 3000 : 1000,
+        deductions: 0,
+        netSalary: staff.monthlySalary + (staff.role === "TEACHER" ? 3000 : 1000),
+        status: "PAID",
+        paidDate: "03 Aug 2025",
+        paymentMethod: "CASH",
+        receiptNumber: `SAL-${staff.name.split(" ")[0].toUpperCase()}-AUG25`,
+        notes: "Monthly salary",
+      },
+    });
+  }
+
+  console.log("📋 Seeding Staff Attendance...");
+  const staffDates = ["2025-09-08", "2025-09-09", "2025-09-10"];
+  for (const dateStr of staffDates) {
+    for (const staff of createdStaff) {
+      let status = "PRESENT";
+      let checkInTime: string | null = "07:30 AM";
+      let remarks = "On-time arrival";
+      
+      if (staff.name === "Yaqoob Khan" && dateStr === "2025-09-10") {
+        status = "LATE";
+        checkInTime = "08:15 AM";
+        remarks = "Late arrival";
+      } else if (staff.name === "Ghulam Nabi" && dateStr === "2025-09-09") {
+        status = "LEAVE";
+        checkInTime = null;
+        remarks = "Sick leave";
+      }
+      
+      await prisma.staffAttendance.create({
+        data: {
+          staffId: staff.id,
+          date: dateStr,
+          status,
+          checkInTime,
+          remarks,
+        },
+      });
+    }
   }
 
   console.log("✅ Database seeding complete!");

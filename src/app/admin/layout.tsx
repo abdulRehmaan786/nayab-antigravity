@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   ShieldCheck,
   Fingerprint,
+  Briefcase,
 } from "lucide-react";
 
 export default async function AdminLayout({
@@ -35,6 +36,7 @@ export default async function AdminLayout({
     { name: "Students", href: "/admin/students", icon: Users, desc: "Student List & Admissions" },
     { name: "Examinations", href: "/admin/results", icon: FileText, desc: "Marks Entry & Results" },
     { name: "Finance", href: "/admin/fees", icon: CreditCard, desc: "Fee Collection & Status" },
+    { name: "Staff & Payroll", href: "/admin/staff", icon: Briefcase, desc: "Staff Salary & Attendance" },
     { name: "Communication", href: "/admin/announcements", icon: Bell, desc: "Announcements & Notices" },
     { name: "Reports", href: "/admin/attendance", icon: BarChart3, desc: "Biometric & Academic Reports" },
     { name: "Settings", href: "/admin/teachers", icon: Settings, desc: "User Roles & General" },

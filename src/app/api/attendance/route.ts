@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentSession } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 function getTodayString(): string {
   const now = new Date();
   const year = now.getFullYear();

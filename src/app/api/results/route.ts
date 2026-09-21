@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { getCurrentSession } from "@/lib/auth";
 import { calculateGrade, calculateSubjectGrade } from "@/lib/grading";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);

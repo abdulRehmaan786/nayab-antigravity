@@ -271,7 +271,7 @@ export default function AdminStudentsPage() {
             )}
 
             <form onSubmit={handleCreateStudent} className="space-y-3.5 text-xs">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Class</label>
                   <select
@@ -316,7 +316,7 @@ export default function AdminStudentsPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Zain Ali"
+                  placeholder="e.g. Muhammad Ali"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
@@ -335,7 +335,7 @@ export default function AdminStudentsPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Section</label>
                   <input

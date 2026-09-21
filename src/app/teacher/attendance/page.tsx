@@ -169,57 +169,57 @@ export default function TeacherAttendanceCalendarPage() {
         </div>
       </div>
 
-      {/* KPI Cards Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
+      {/* KPI Cards Row — Responsive Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {/* Attendance Rate */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Attendance Rate</p>
-          <h3 className="text-2xl font-black text-[#0D1B3D] mt-1 font-heading">
+          <h3 className="text-xl sm:text-2xl font-black text-[#0D1B3D] mt-1 font-heading">
             {attendanceRate}%
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">{totalRecorded} recorded days</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">{totalRecorded} recorded days</p>
         </div>
 
         {/* Present Days */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm">
           <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" /> Present
           </p>
-          <h3 className="text-2xl font-black text-emerald-600 mt-1 font-heading">
+          <h3 className="text-xl sm:text-2xl font-black text-emerald-600 mt-1 font-heading">
             {presentDays}
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">On-time check-ins</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">On-time check-ins</p>
         </div>
 
         {/* Late Days */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm">
           <p className="text-[10px] font-bold uppercase tracking-wider text-amber-600 flex items-center gap-1">
             <Clock className="w-3 h-3" /> Late Arrivals
           </p>
-          <h3 className="text-2xl font-black text-amber-600 mt-1 font-heading">
+          <h3 className="text-xl sm:text-2xl font-black text-amber-600 mt-1 font-heading">
             {lateDays}
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">Late logs</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">Late logs</p>
         </div>
 
         {/* Approved Leave */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm">
           <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1">
             <Info className="w-3 h-3" /> Leaves
           </p>
-          <h3 className="text-2xl font-black text-blue-600 mt-1 font-heading">
+          <h3 className="text-xl sm:text-2xl font-black text-blue-600 mt-1 font-heading">
             {leaveDays}
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">Approved sick/casual</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">Approved sick/casual</p>
         </div>
 
         {/* Monthly Salary Status */}
-        <div className="bg-white p-4 rounded-2xl border border-[#D4AF37]/50 shadow-sm col-span-2 sm:col-span-1 bg-gradient-to-br from-white to-[#FCF9EE]">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#D4AF37]/50 shadow-sm col-span-2 sm:col-span-3 lg:col-span-1 bg-gradient-to-br from-white to-[#FCF9EE]">
           <p className="text-[10px] font-bold uppercase tracking-wider text-[#0D1B3D] flex items-center gap-1">
             <DollarSign className="w-3 h-3 text-[#D4AF37]" /> Salary Status
           </p>
           <div className="flex items-baseline gap-1 mt-1">
-            <h3 className="text-xl font-black text-[#0D1B3D] font-heading">
+            <h3 className="text-lg sm:text-xl font-black text-[#0D1B3D] font-heading">
               Rs. {matchingSalary ? matchingSalary.netSalary.toLocaleString() : (profile?.monthlySalary || 35000).toLocaleString()}
             </h3>
           </div>
@@ -235,9 +235,9 @@ export default function TeacherAttendanceCalendarPage() {
         </div>
       </div>
 
-      {/* Main Calendar View */}
+      {/* Main Calendar View — Horizontal Scroll for Mobile */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div>
             <h2 className="text-base sm:text-lg font-bold text-slate-900 font-heading flex items-center gap-2">
               <span>Monthly Attendance Calendar</span>
@@ -250,39 +250,42 @@ export default function TeacherAttendanceCalendarPage() {
 
           {/* Legend Chips */}
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md font-semibold text-[11px]">
+            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md font-semibold text-[10px] sm:text-[11px]">
               <span className="w-2 h-2 rounded-full bg-emerald-500" /> Present
             </span>
-            <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-800 px-2 py-0.5 rounded-md font-semibold text-[11px]">
+            <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-800 px-2 py-0.5 rounded-md font-semibold text-[10px] sm:text-[11px]">
               <span className="w-2 h-2 rounded-full bg-amber-500" /> Late
             </span>
-            <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-blue-800 px-2 py-0.5 rounded-md font-semibold text-[11px]">
+            <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-blue-800 px-2 py-0.5 rounded-md font-semibold text-[10px] sm:text-[11px]">
               <span className="w-2 h-2 rounded-full bg-blue-500" /> Leave
             </span>
-            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-200 text-slate-500 px-2 py-0.5 rounded-md font-semibold text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-slate-300" /> Sunday / Off
+            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-200 text-slate-500 px-2 py-0.5 rounded-md font-semibold text-[10px] sm:text-[11px]">
+              <span className="w-2 h-2 rounded-full bg-slate-300" /> Sunday
             </span>
           </div>
         </div>
 
-        {/* Days of Week Header */}
-        <div className="grid grid-cols-7 gap-1.5 sm:gap-2 text-center text-xs font-extrabold text-slate-500 uppercase tracking-wider py-2 bg-slate-50 rounded-xl border border-slate-100">
-          {DAYS_OF_WEEK.map((d) => (
-            <div key={d} className={d === "Sun" ? "text-rose-500" : ""}>
-              {d}
+        {/* Scroll Container for Mobile */}
+        <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+          <div className="min-w-[520px] space-y-2">
+            {/* Days of Week Header */}
+            <div className="grid grid-cols-7 gap-1.5 sm:gap-2 text-center text-xs font-extrabold text-slate-500 uppercase tracking-wider py-2 bg-slate-50 rounded-xl border border-slate-100">
+              {DAYS_OF_WEEK.map((d) => (
+                <div key={d} className={d === "Sun" ? "text-rose-500" : ""}>
+                  {d}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Calendar Grid Cells */}
-        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-          {/* Empty padding cells for first week */}
-          {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
-            <div
-              key={`empty-${idx}`}
-              className="min-h-[85px] sm:min-h-[105px] rounded-xl border border-dashed border-slate-100 bg-slate-50/40 p-1.5 opacity-40"
-            />
-          ))}
+            {/* Calendar Grid Cells */}
+            <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+              {/* Empty padding cells for first week */}
+              {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
+                <div
+                  key={`empty-${idx}`}
+                  className="min-h-[75px] sm:min-h-[100px] rounded-xl border border-dashed border-slate-100 bg-slate-50/40 p-1.5 opacity-40"
+                />
+              ))}
 
           {/* Actual Month Days */}
           {Array.from({ length: totalDaysInMonth }).map((_, dayIdx) => {
@@ -372,6 +375,8 @@ export default function TeacherAttendanceCalendarPage() {
               </div>
             );
           })}
+            </div>
+          </div>
         </div>
       </div>
 

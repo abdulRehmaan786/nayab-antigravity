@@ -48,9 +48,10 @@ const CLASSES = [
 ];
 
 const DEMO_STUDENTS = [
+  { label: "Class 1 — Roll 1 / GR 1573 (Aarish Ali - A+)", className: "Class 1", roll: "1" },
+  { label: "Class 1 — Roll 43 (Usman - 585/600, 97.5%)", className: "Class 1", roll: "43" },
   { label: "Class 9 — Roll 101 (Distinction & On-time)", className: "Class 9", roll: "101" },
   { label: "Class 10 — Roll 201 (Top Rank)", className: "Class 10", roll: "201" },
-  { label: "Class 9 — Roll 105 (Late Punch)", className: "Class 9", roll: "105" },
   { label: "Class 8 — Roll 301 (A+ Grade)", className: "Class 8", roll: "301" },
 ];
 

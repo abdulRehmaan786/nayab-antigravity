@@ -38,7 +38,7 @@ const DEVICES = [
   { id: "BIO-LAB-01", name: "Lab Gate — Computer & Science Complex" },
 ];
 
-const CLASSES = ["All Classes", "Class 10", "Class 9", "Class 8"];
+const CLASSES = ["All Classes", "Class 10", "Class 9", "Class 8", "Class 7", "Class 6", "Class 5", "Class 4", "Class 3", "Class 2", "Class 1"];
 const STATUS_FILTERS = ["ALL", "PRESENT", "LATE", "ABSENT", "LEAVE"];
 
 export default function AdminAttendancePage() {

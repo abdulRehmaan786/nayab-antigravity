@@ -7,6 +7,11 @@ import { Home, FileText, CreditCard, Bell, User } from "lucide-react";
 export default function BottomNav() {
   const pathname = usePathname();
 
+  // Do not render public bottom nav inside admin or teacher portals
+  if (pathname.startsWith("/admin") || pathname.startsWith("/teacher")) {
+    return null;
+  }
+
   const tabs = [
     { name: "Home", href: "/", icon: Home },
     { name: "Results", href: "/results", icon: FileText },

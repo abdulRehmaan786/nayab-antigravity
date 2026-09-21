@@ -25,6 +25,8 @@ const CLASSES = [
 ];
 
 const DEMOS = [
+  { label: "Class 1 - Roll 1 (Aarish Ali)", class: "Class 1", roll: "1" },
+  { label: "Class 1 - Roll 43 (Usman - 585/600)", class: "Class 1", roll: "43" },
   { label: "Class 9 - Roll 101", class: "Class 9", roll: "101" },
   { label: "Class 9 - Roll 102", class: "Class 9", roll: "102" },
   { label: "Class 10 - Roll 201", class: "Class 10", roll: "201" },

@@ -389,21 +389,23 @@ export default function AdminStaffPage() {
       {activeTab === "salary" && (
         <div className="space-y-4">
           {/* Month Selector */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <label className="text-xs font-bold text-slate-700">Salary Month:</label>
-            <select
-              value={salaryMonth}
-              onChange={(e) => setSalaryMonth(e.target.value)}
-              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"
-            >
-              <option value="September 2025">September 2025</option>
-              <option value="August 2025">August 2025</option>
-              <option value="July 2025">July 2025</option>
-              <option value="October 2025">October 2025</option>
-            </select>
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <label className="text-xs font-bold text-slate-700 whitespace-nowrap">Salary Month:</label>
+              <select
+                value={salaryMonth}
+                onChange={(e) => setSalaryMonth(e.target.value)}
+                className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold w-full sm:w-auto"
+              >
+                <option value="September 2025">September 2025</option>
+                <option value="August 2025">August 2025</option>
+                <option value="July 2025">July 2025</option>
+                <option value="October 2025">October 2025</option>
+              </select>
+            </div>
 
             {/* Summary Cards */}
-            <div className="ml-auto flex gap-3">
+            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
               <div className="text-center">
                 <p className="text-[10px] text-slate-400 uppercase font-semibold">Total Payroll</p>
                 <p className="text-sm font-black text-[#1B2A4A]">
@@ -506,17 +508,19 @@ export default function AdminStaffPage() {
       {activeTab === "attendance" && (
         <div className="space-y-4">
           {/* Date Selector */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <label className="text-xs font-bold text-slate-700">Attendance Date:</label>
-            <input
-              type="date"
-              value={attendanceDate}
-              onChange={(e) => setAttendanceDate(e.target.value)}
-              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"
-            />
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <label className="text-xs font-bold text-slate-700 whitespace-nowrap">Attendance Date:</label>
+              <input
+                type="date"
+                value={attendanceDate}
+                onChange={(e) => setAttendanceDate(e.target.value)}
+                className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold w-full sm:w-auto"
+              />
+            </div>
 
             {/* Summary */}
-            <div className="ml-auto flex gap-3">
+            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
               <div className="text-center">
                 <p className="text-[10px] text-emerald-600 uppercase font-semibold">Present</p>
                 <p className="text-sm font-black text-emerald-600">
@@ -640,7 +644,7 @@ export default function AdminStaffPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Role</label>
                   <select
@@ -666,7 +670,7 @@ export default function AdminStaffPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Phone</label>
                   <input

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { CLASS1_STUDENTS } from "./data/class1_data";
 
 const prisma = new PrismaClient();
 
@@ -30,6 +31,7 @@ async function main() {
         { className: "Class 10", subject: "All Subjects" },
         { className: "Class 9", subject: "All Subjects" },
         { className: "Class 8", subject: "All Subjects" },
+        { className: "Class 1", subject: "All Subjects" },
       ]),
     },
   });
@@ -69,8 +71,9 @@ async function main() {
       email: "teacher.english@nayab.edu.pk",
       password: teacherPassword,
       role: "TEACHER",
-      assignedClasses: JSON.stringify(["Class 8", "Class 9", "Class 10"]),
+      assignedClasses: JSON.stringify(["Class 1", "Class 8", "Class 9", "Class 10"]),
       assignedSubjects: JSON.stringify([
+        { className: "Class 1", subject: "English" },
         { className: "Class 9", subject: "English" },
         { className: "Class 10", subject: "English" },
         { className: "Class 8", subject: "English" },
@@ -105,6 +108,27 @@ async function main() {
   for (const s of studentsData) {
     const student = await prisma.student.create({ data: s });
     createdStudents.push(student);
+  }
+
+  console.log("📚 Creating Class 1 Students (102 Students from Official Result Sheet)...");
+  const createdClass1Students: { student: any; raw: any }[] = [];
+  for (const s of CLASS1_STUDENTS) {
+    const student = await prisma.student.create({
+      data: {
+        rollNumber: s.rollNumber,
+        grNumber: s.grNumber,
+        name: s.name,
+        fatherName: s.fatherName,
+        className: s.className,
+        section: s.section,
+        gender: s.gender,
+        phone: "+92 300 000" + s.rollNumber.padStart(4, "0"),
+        dateOfBirth: s.dateOfBirth,
+        address: "Mirwah Gorchani, Sindh",
+      },
+    });
+    createdStudents.push(student);
+    createdClass1Students.push({ student, raw: s });
   }
 
   console.log("📝 Generating Exam Results...");
@@ -269,6 +293,87 @@ async function main() {
     });
   }
 
+  console.log("📊 Seeding Annual Examination 2025-26 Results for Class 1 (102 Students)...");
+  function getSubGrade(obt: number, max: number): string {
+    const pct = (obt / max) * 100;
+    if (pct >= 80) return "A+";
+    if (pct >= 70) return "A";
+    if (pct >= 60) return "B";
+    if (pct >= 50) return "C";
+    return "F";
+  }
+
+  for (const { student, raw } of createdClass1Students) {
+    const subjects = [
+      {
+        subject: "English",
+        maxMarks: 100,
+        obtainedMarks: raw.marks.english,
+        grade: getSubGrade(raw.marks.english, 100),
+        remarks: raw.marks.english >= 80 ? "Outstanding writing & reading" : raw.marks.english >= 60 ? "Good comprehension" : "Satisfactory",
+      },
+      {
+        subject: "Urdu",
+        maxMarks: 100,
+        obtainedMarks: raw.marks.urdu,
+        grade: getSubGrade(raw.marks.urdu, 100),
+        remarks: raw.marks.urdu >= 80 ? "Excellent reading & grammar" : raw.marks.urdu >= 60 ? "Good" : "Satisfactory",
+      },
+      {
+        subject: "Mathematics",
+        maxMarks: 100,
+        obtainedMarks: raw.marks.math,
+        grade: getSubGrade(raw.marks.math, 100),
+        remarks: raw.marks.math >= 80 ? "Sharp analytical thinking" : raw.marks.math >= 60 ? "Good calculation skills" : "Passed",
+      },
+      {
+        subject: "Islamiyat",
+        maxMarks: 100,
+        obtainedMarks: raw.marks.islamiyat,
+        grade: getSubGrade(raw.marks.islamiyat, 100),
+        remarks: raw.marks.islamiyat >= 80 ? "Superb knowledge" : raw.marks.islamiyat >= 60 ? "Good" : "Satisfactory",
+      },
+      {
+        subject: "Computer Science",
+        maxMarks: 100,
+        obtainedMarks: raw.marks.computer,
+        grade: getSubGrade(raw.marks.computer, 100),
+        remarks: raw.marks.computer >= 80 ? "Excellent practical aptitude" : raw.marks.computer >= 60 ? "Good" : "Satisfactory",
+      },
+      {
+        subject: "General Science",
+        maxMarks: 100,
+        obtainedMarks: raw.marks.generalScience,
+        grade: getSubGrade(raw.marks.generalScience, 100),
+        remarks: raw.marks.generalScience >= 80 ? "High conceptual clarity" : raw.marks.generalScience >= 60 ? "Good understanding" : "Satisfactory",
+      },
+    ];
+
+    const totalMarks = 600;
+    const obtainedMarks = raw.marks.total;
+    const percentage = Number(((obtainedMarks / totalMarks) * 100).toFixed(1));
+    let overallGrade = "F";
+    if (percentage >= 80) overallGrade = "A+";
+    else if (percentage >= 70) overallGrade = "A";
+    else if (percentage >= 60) overallGrade = "B";
+    else if (percentage >= 50) overallGrade = "C";
+
+    await prisma.examResult.create({
+      data: {
+        studentId: student.id,
+        examTerm: "Annual Examination 2025-26",
+        academicYear: "2025-2026",
+        subjectMarks: JSON.stringify(subjects),
+        totalMarks,
+        obtainedMarks,
+        percentage,
+        overallGrade,
+        status: "PASS",
+        remarks: percentage >= 80 ? "Passed with Outstanding Distinction! Promoted to next class." : "Passed and Promoted to next class.",
+      },
+    });
+  }
+
   console.log("💰 Creating Fee Records...");
   const feeConfigs = [
     { roll: "101", class: "Class 9", status: "PAID", paidDate: "02 Sep 2025", receipt: "NGS-REC-2025-0914" },
@@ -320,6 +425,37 @@ async function main() {
     });
   }
 
+  console.log("💰 Seeding Fee Records for Class 1 (102 Students)...");
+  for (const { student } of createdClass1Students) {
+    const rollNum = parseInt(student.rollNumber, 10);
+    const isPaid = rollNum % 4 !== 0;
+    await prisma.feeRecord.create({
+      data: {
+        studentId: student.id,
+        month: "September 2025",
+        amount: 2000,
+        dueDate: "10 September 2025",
+        status: isPaid ? "PAID" : "PENDING",
+        paidDate: isPaid ? "05 Sep 2025" : null,
+        receiptNumber: isPaid ? `NGS-C1-${student.rollNumber.padStart(3, "0")}-SEP25` : null,
+        notes: "Monthly Tuition Fee - Class 1",
+      },
+    });
+
+    await prisma.feeRecord.create({
+      data: {
+        studentId: student.id,
+        month: "August 2025",
+        amount: 2000,
+        dueDate: "10 August 2025",
+        status: "PAID",
+        paidDate: "06 Aug 2025",
+        receiptNumber: `NGS-C1-${student.rollNumber.padStart(3, "0")}-AUG25`,
+        notes: "Monthly Tuition Fee - Class 1",
+      },
+    });
+  }
+
   console.log("📲 Seeding Biometric Attendance Logs...");
   const recentDates = ["2025-09-08", "2025-09-09", "2025-09-10"];
 
@@ -346,6 +482,8 @@ async function main() {
         checkInTime = "07:45 AM";
       } else if (student.rollNumber === "101") {
         checkInTime = "07:48 AM";
+      } else if (student.className === "Class 1" && student.rollNumber === "1") {
+        checkInTime = "07:42 AM";
       }
 
       await prisma.attendanceRecord.create({
@@ -355,7 +493,7 @@ async function main() {
           status,
           checkInTime,
           deviceType: "BIOMETRIC_FINGERPRINT",
-          deviceId: student.rollNumber.startsWith("2") ? "BIO-GATE-02" : "BIO-GATE-01",
+          deviceId: student.section === "B" || student.rollNumber.startsWith("2") ? "BIO-GATE-02" : "BIO-GATE-01",
           remarks,
         },
       });

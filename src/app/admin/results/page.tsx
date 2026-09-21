@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Award, Filter, Search, Printer, ExternalLink, CheckCircle2, XCircle } from "lucide-react";
 import { ExamResultData } from "@/lib/types";
 
-const CLASSES = ["All Classes", "Class 10", "Class 9", "Class 8", "Class 7", "Class 6"];
+const CLASSES = ["All Classes", "Class 10", "Class 9", "Class 8", "Class 7", "Class 6", "Class 5", "Class 4", "Class 3", "Class 2", "Class 1"];
 
 export default function AdminResultsPage() {
   const [results, setResults] = useState<ExamResultData[]>([]);

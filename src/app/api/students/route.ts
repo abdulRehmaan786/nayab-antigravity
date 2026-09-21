@@ -12,7 +12,11 @@ export async function GET(req: NextRequest) {
 
     const where: Record<string, unknown> = {};
     if (className && className !== "all") {
-      where.className = className;
+      if (className.toLowerCase() === "class 1" || className.toLowerCase() === "class 1st" || className.toLowerCase() === "1st") {
+        where.className = { in: ["Class 1", "Class 1st"] };
+      } else {
+        where.className = className;
+      }
     }
     if (query) {
       where.OR = [

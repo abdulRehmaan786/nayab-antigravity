@@ -14,7 +14,7 @@ interface TeacherItem {
   createdAt: string;
 }
 
-const AVAILABLE_CLASSES = ["Class 10", "Class 9", "Class 8", "Class 7", "Class 6"];
+const AVAILABLE_CLASSES = ["Class 10", "Class 9", "Class 8", "Class 7", "Class 6", "Class 5", "Class 4", "Class 3", "Class 2", "Class 1"];
 const AVAILABLE_SUBJECTS = [
   "General Science",
   "Physics",
@@ -528,13 +528,13 @@ export default function AdminTeachersPage() {
                 )}
 
                 {/* Add New Subject Row */}
-                <div className="flex items-end gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-2 bg-slate-50/80 p-3 rounded-2xl border border-slate-200">
                   <div className="flex-1">
                     <label className="block text-[10px] text-slate-500 font-semibold mb-0.5">Class</label>
                     <select
                       id="create-new-class"
                       defaultValue="Class 9"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-xs"
+                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium text-xs text-slate-800"
                     >
                       {AVAILABLE_CLASSES.map((c) => (
                         <option key={c} value={c}>{c}</option>
@@ -546,7 +546,7 @@ export default function AdminTeachersPage() {
                     <select
                       id="create-new-subject"
                       defaultValue="General Science"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-xs"
+                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium text-xs text-slate-800"
                     >
                       {AVAILABLE_SUBJECTS.map((s) => (
                         <option key={s} value={s}>{s}</option>
@@ -569,10 +569,10 @@ export default function AdminTeachersPage() {
                         setCreateClasses(Array.from(new Set(updated.map((u) => u.className))));
                       }
                     }}
-                    className="inline-flex items-center gap-1 bg-[#1B2A4A] hover:bg-[#111C32] text-white px-3 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap"
+                    className="inline-flex items-center justify-center gap-1 bg-[#1B2A4A] hover:bg-[#111C32] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap w-full sm:w-auto"
                   >
-                    <Plus className="w-3 h-3 text-[#D4AF37]" />
-                    <span>Add</span>
+                    <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Add Subject</span>
                   </button>
                 </div>
 

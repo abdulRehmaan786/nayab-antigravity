@@ -16,14 +16,38 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    const classVariants = [className];
+    if (className.toLowerCase() === "class 1" || className.toLowerCase() === "class 1st" || className.toLowerCase() === "1st") {
+      classVariants.push("Class 1", "Class 1st", "1st");
+    }
+
+    const rollVariants = [rollNumber];
+    const unpadded = rollNumber.replace(/^0+/, "");
+    if (unpadded && !rollVariants.includes(unpadded)) {
+      rollVariants.push(unpadded);
+    }
+    if (unpadded.length === 1) {
+      rollVariants.push(`0${unpadded}`);
+    }
+
     const student = await db.student.findFirst({
       where: {
-        className: {
-          equals: className,
-        },
-        rollNumber: {
-          equals: rollNumber,
-        },
+        OR: [
+          {
+            className: { in: classVariants },
+            rollNumber: { in: rollVariants },
+          },
+          {
+            className: { in: classVariants },
+            grNumber: rollNumber,
+          },
+          {
+            grNumber: rollNumber,
+          },
+          {
+            grNumber: `GR-${rollNumber}`,
+          },
+        ],
       },
       include: {
         results: {
@@ -44,7 +68,7 @@ export async function GET(req: NextRequest) {
     if (!student) {
       return NextResponse.json(
         {
-          error: `No student record found for ${className} with Roll Number "${rollNumber}". Please verify your roll number or contact the school office.`,
+          error: `No student record found for ${className} with Roll / G.R. Number "${rollNumber}". Please verify your roll number or contact the school office.`,
         },
         { status: 404 }
       );
@@ -107,6 +131,7 @@ export async function GET(req: NextRequest) {
       student: {
         id: student.id,
         rollNumber: student.rollNumber,
+        grNumber: student.grNumber,
         name: student.name,
         fatherName: student.fatherName,
         className: student.className,

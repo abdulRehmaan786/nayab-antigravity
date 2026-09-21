@@ -16,7 +16,11 @@ export async function GET(req: NextRequest) {
     if (studentId) where.studentId = studentId;
     if (examTerm) where.examTerm = examTerm;
     if (className && className !== "all") {
-      where.student = { className };
+      if (className.toLowerCase() === "class 1" || className.toLowerCase() === "class 1st" || className.toLowerCase() === "1st") {
+        where.student = { className: { in: ["Class 1", "Class 1st"] } };
+      } else {
+        where.student = { className };
+      }
     }
 
     const results = await db.examResult.findMany({

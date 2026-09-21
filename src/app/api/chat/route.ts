@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { findSchoolKnowledge, SCHOOL_INFO } from "@/lib/school-knowledge";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const { message } = await req.json();

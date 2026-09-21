@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { createAuthToken, AUTH_COOKIE_NAME } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
@@ -80,8 +82,9 @@ export async function POST(req: NextRequest) {
     return response;
   } catch (error) {
     console.error("Login error:", error);
+    const errMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { error: "Internal server error during authentication" },
+      { error: "Internal server error during authentication", details: errMessage },
       { status: 500 }
     );
   }

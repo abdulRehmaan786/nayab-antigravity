@@ -144,3 +144,16 @@ export interface AuthSession {
   assignedSubjects: TeacherSubjectAssignment[];
   classTeacherOf?: string | null;
 }
+
+export interface GalleryItemData {
+  id: string;
+  title: string;
+  description?: string | null;
+  imageUrl: string;
+  category: "CAMPUS" | "SPORTS" | "EVENTS" | "ACADEMICS" | "CEREMONY" | string;
+  date?: string | null;
+  featured: boolean;
+  uploadedBy: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}

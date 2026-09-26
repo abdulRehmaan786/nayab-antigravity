@@ -9,6 +9,7 @@ async function main() {
   await prisma.staffAttendance.deleteMany();
   await prisma.staffSalary.deleteMany();
   await prisma.staffMember.deleteMany();
+  await prisma.galleryItem.deleteMany();
   await prisma.attendanceRecord.deleteMany();
   await prisma.feeRecord.deleteMany();
   await prisma.examResult.deleteMany();
@@ -650,6 +651,95 @@ async function main() {
         },
       });
     }
+  }
+
+  console.log("📸 Seeding School Gallery Photos...");
+  const galleryPhotos = [
+    {
+      title: "Main Campus Academic Block & Courtyard",
+      description: "Our campus building in Mirwah featuring spacious, well-ventilated classrooms and green grounds.",
+      imageUrl: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&q=80",
+      category: "CAMPUS",
+      date: "September 2025",
+      featured: true,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Annual Science & Innovation Fair 2025",
+      description: "Students demonstrating physics and chemistry experimental models during the inter-school science exhibition.",
+      imageUrl: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1200&q=80",
+      category: "ACADEMICS",
+      date: "August 2025",
+      featured: true,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Inter-House Athletics & 100m Sprint Championship",
+      description: "House athletes competing with passion in the annual sports gala track events.",
+      imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&q=80",
+      category: "SPORTS",
+      date: "September 2025",
+      featured: true,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Modern Computer Lab & Digital Literacy Session",
+      description: "Matriculation students mastering web fundamentals and computer science concepts under teacher supervision.",
+      imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80",
+      category: "ACADEMICS",
+      date: "July 2025",
+      featured: false,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Annual Prize Distribution & Academic Excellence Awards",
+      description: "Board toppers and position holders honored with shields, medals, and certificates by the Principal.",
+      imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=80",
+      category: "CEREMONY",
+      date: "May 2025",
+      featured: true,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Junior Wing Art & Creative Expression Workshop",
+      description: "Primary students exploring watercolor painting, sketches, and handicrafts in the creative arts room.",
+      imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80",
+      category: "EVENTS",
+      date: "August 2025",
+      featured: false,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Central Reference Library & Silent Study Hall",
+      description: "Equipped with over 3,000 academic titles, science journals, and quiet study alcoves for serious research.",
+      imageUrl: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1200&q=80",
+      category: "CAMPUS",
+      date: "September 2025",
+      featured: false,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Independence Day Celebrations & National Flag Hoisting",
+      description: "Flag hoisting assembly, patriotic speeches, and national songs presented by students on 14th August.",
+      imageUrl: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&q=80",
+      category: "EVENTS",
+      date: "August 14, 2025",
+      featured: true,
+      uploadedBy: "Admin",
+    },
+    {
+      title: "Cricket Championship Final Match",
+      description: "Tariq House vs Farzana House in the thrilling final match of the Inter-Wing Cricket Trophy.",
+      imageUrl: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1200&q=80",
+      category: "SPORTS",
+      date: "September 2025",
+      featured: false,
+      uploadedBy: "Admin",
+    },
+  ];
+
+  for (const p of galleryPhotos) {
+    await prisma.galleryItem.create({ data: p });
   }
 
   console.log("✅ Database seeding complete!");

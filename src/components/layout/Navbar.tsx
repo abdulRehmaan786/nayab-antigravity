@@ -43,6 +43,7 @@ export default function Navbar() {
     { name: "About Us", href: "/about" },
     { name: "Academics", href: "/academics" },
     { name: "Admissions", href: "/admissions" },
+    { name: "Gallery", href: "/gallery" },
     { name: "Announcements", href: "/announcements" },
     { name: "Contact Us", href: "/contact" },
   ];

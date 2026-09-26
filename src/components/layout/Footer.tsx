@@ -54,6 +54,9 @@ export default function Footer() {
                 <Link href="/results" className="hover:text-[#D4AF37] transition">Examination Marksheets</Link>
               </li>
               <li>
+                <Link href="/gallery" className="hover:text-[#D4AF37] transition">Photo Gallery & Events</Link>
+              </li>
+              <li>
                 <Link href="/fees" className="hover:text-[#D4AF37] transition">Fee Vouchers</Link>
               </li>
             </ul>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RollNumberSearch from "@/components/public/RollNumberSearch";
 import { db } from "@/lib/db";
-import { Award, FileText, CreditCard, Bell, Sparkles, BookOpen, Users, Clock, ShieldCheck, ChevronRight, Pin, GraduationCap } from "lucide-react";
+import { Award, FileText, CreditCard, Bell, Sparkles, BookOpen, Users, Clock, ShieldCheck, ChevronRight, Pin, GraduationCap, Camera } from "lucide-react";
 
 export const revalidate = 60; // Refresh every 60 seconds
 
@@ -13,18 +13,23 @@ async function getHomePageData() {
       take: 4,
     });
 
+    const galleryPreview = await db.galleryItem.findMany({
+      orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+      take: 4,
+    });
+
     const totalStudents = await db.student.count();
     const totalResults = await db.examResult.count();
 
-    return { announcements, totalStudents, totalResults };
+    return { announcements, galleryPreview, totalStudents, totalResults };
   } catch (error) {
     console.error("Home page data fetch error:", error);
-    return { announcements: [], totalStudents: 15, totalResults: 10 };
+    return { announcements: [], galleryPreview: [], totalStudents: 15, totalResults: 10 };
   }
 }
 
 export default async function HomePage() {
-  const { announcements, totalStudents, totalResults } = await getHomePageData();
+  const { announcements, galleryPreview, totalStudents, totalResults } = await getHomePageData();
 
   return (
     <div className="w-full">
@@ -317,6 +322,61 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Campus Moments & Photo Gallery Section */}
+      {galleryPreview && galleryPreview.length > 0 && (
+        <section className="bg-[#F8F9FB] py-14 border-b border-slate-200">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#D4AF37] uppercase tracking-wider">
+                  <Camera className="w-3.5 h-3.5" />
+                  <span>Campus Moments & Media</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1 font-heading">
+                  Life at Nayab High School Mirwah
+                </h2>
+              </div>
+              <Link
+                href="/gallery"
+                className="text-xs sm:text-sm font-semibold text-[#1E3A8A] hover:text-[#0D1B3D] flex items-center gap-1 self-start sm:self-auto"
+              >
+                <span>View Full Photo Gallery</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {galleryPreview.map((photo) => (
+                <Link
+                  key={photo.id}
+                  href="/gallery"
+                  className="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between transform hover:-translate-y-1"
+                >
+                  <div className="relative aspect-[16/11] w-full bg-slate-100 overflow-hidden">
+                    <img
+                      src={photo.imageUrl}
+                      alt={photo.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-2 left-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-md text-white px-2 py-0.5 rounded-full">
+                        {photo.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-3.5 space-y-1">
+                    <h3 className="font-bold text-xs text-slate-900 line-clamp-1 group-hover:text-[#1B2A4A] transition-colors">
+                      {photo.title}
+                    </h3>
+                    <p className="text-[10px] text-slate-400 font-semibold">{photo.date || "Recent"}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Uniform & Timings Highlights */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14">

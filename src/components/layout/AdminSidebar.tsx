@@ -18,6 +18,7 @@ import {
   Briefcase,
   Menu,
   X,
+  Camera,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -37,6 +38,7 @@ const navItems = [
   { name: "Finance", href: "/admin/fees", icon: CreditCard },
   { name: "Staff & Payroll", href: "/admin/staff", icon: Briefcase },
   { name: "Communication", href: "/admin/announcements", icon: Bell },
+  { name: "School Gallery", href: "/admin/gallery", icon: Camera },
   { name: "Reports", href: "/admin/attendance", icon: BarChart3 },
 ];
 

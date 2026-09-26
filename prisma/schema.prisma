@@ -154,3 +154,16 @@ model StaffSalary {
 
   @@unique([staffId, month])
 }
+
+model GalleryItem {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  imageUrl    String
+  category    String   @default("CAMPUS") // "CAMPUS" | "SPORTS" | "EVENTS" | "ACADEMICS" | "CEREMONY"
+  date        String?  // e.g. "September 2025"
+  featured    Boolean  @default(false)
+  uploadedBy  String   @default("Admin")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

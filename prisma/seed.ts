@@ -505,7 +505,7 @@ async function main() {
     {
       title: "Revised Winter School Timings & Uniform Guidelines",
       content:
-        "In accordance with regional weather guidelines, Nayab Grammar School will observe winter timings starting from Monday. School gates open at 7:45 AM, assembly starts promptly at 8:00 AM, and dismissal is at 1:30 PM. All students must wear the proper school uniform: boys in navy blue trousers, white shirts, and navy ties; girls in navy blue frock/shalwar-kameez with white shalwar and school badge. Sweaters or blazers must be plain navy blue.",
+        "In accordance with regional weather guidelines, Nayab English Grammer High School Mirwah will observe winter timings starting from Monday. School gates open at 7:45 AM, assembly starts promptly at 8:00 AM, and dismissal is at 1:30 PM. All students must wear the proper school uniform: boys in navy blue trousers, white shirts, and navy ties; girls in navy blue frock/shalwar-kameez with white shalwar and school badge. Sweaters or blazers must be plain navy blue.",
       category: "NOTICE",
       isPinned: true,
       publishedBy: "Principal Office",
@@ -523,7 +523,7 @@ async function main() {
     {
       title: "Annual Sports & Athletics Gala 2025",
       content:
-        "Nayab Grammar School is excited to announce the Annual Inter-House Sports Gala scheduled for October 15–17. Events will include 100m sprint, cricket tournament, badminton, tug-of-war, and relay races. Interested students should register their names with the Physical Education teachers by next Friday.",
+        "Nayab English Grammer High School Mirwah is excited to announce the Annual Inter-House Sports Gala scheduled for October 15–17. Events will include 100m sprint, cricket tournament, badminton, tug-of-war, and relay races. Interested students should register their names with the Physical Education teachers by next Friday.",
       category: "EVENT",
       isPinned: false,
       publishedBy: "Sports Department",

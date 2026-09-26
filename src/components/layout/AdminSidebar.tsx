@@ -52,18 +52,18 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
           <div className="w-8 h-8 rounded-full bg-white p-0.5 border border-[#D4AF37] flex items-center justify-center overflow-hidden shrink-0 shadow">
             <Image
               src="/images/school-logo.png"
-              alt="Nayab Grammar Logo"
+              alt="Nayab English Grammer High School Logo"
               width={30}
               height={30}
               className="w-full h-full object-contain"
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-xs tracking-tight text-white font-heading leading-tight">
-              NAYAB GRAMMAR
+            <span className="font-extrabold text-[11px] tracking-tight text-white font-heading leading-tight">
+              NAYAB ENGLISH GRAMMER
             </span>
             <span className="text-[9px] text-[#D4AF37] font-bold uppercase tracking-wider">
-              Admin Console
+              High School Mirwah · Admin
             </span>
           </div>
         </div>
@@ -138,18 +138,18 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
             <div className="w-11 h-11 rounded-full bg-white p-0.5 border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden shrink-0 shadow">
               <Image
                 src="/images/school-logo.png"
-                alt="Nayab Grammar Logo"
+                alt="Nayab English Grammer High School Logo"
                 width={40}
                 height={40}
                 className="w-full h-full object-contain"
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-tight leading-none text-white font-heading">
-                NAYAB GRAMMAR
+              <span className="font-extrabold text-xs tracking-tight leading-tight text-white font-heading">
+                NAYAB ENGLISH GRAMMER
               </span>
-              <span className="text-[10px] text-[#D4AF37] font-semibold tracking-wider uppercase mt-1">
-                Mirwah · Admin
+              <span className="text-[10px] text-[#D4AF37] font-semibold tracking-wider uppercase mt-0.5">
+                High School Mirwah
               </span>
             </div>
           </div>

@@ -67,7 +67,7 @@ export default function LoginPage() {
           <div className="w-20 h-20 rounded-full bg-white p-1 border-2 border-[#D4AF37] mx-auto shadow-md flex items-center justify-center mb-3">
             <Image
               src="/images/school-logo.png"
-              alt="Nayab Grammar School Emblem"
+              alt="Nayab English Grammer High School Mirwah Emblem"
               width={76}
               height={76}
               className="w-full h-full object-contain"
@@ -77,7 +77,7 @@ export default function LoginPage() {
             School Portal Sign In
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Nayab Grammar School Mirwah · Learn · Grow · Succeed
+            Nayab English Grammer High School Mirwah · Learn · Grow · Succeed
           </p>
         </div>
 

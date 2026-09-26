@@ -279,7 +279,7 @@ export default function FeesPage() {
           </p>
           <ul className="mt-3 space-y-1.5 text-xs text-slate-600">
             <li>• <strong>Bank:</strong> Habib Bank Limited (HBL) / MCB Mirwah</li>
-            <li>• <strong>Account Title:</strong> Nayab Grammar School</li>
+            <li>• <strong>Account Title:</strong> Nayab English Grammer High School Mirwah</li>
             <li>• <strong>Challan / Reference:</strong> Enter Student Class & Roll No</li>
             <li>• Share transaction screenshot via WhatsApp to: 0301-2345670</li>
           </ul>

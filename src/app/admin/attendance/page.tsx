@@ -166,7 +166,7 @@ export default function AdminAttendancePage() {
             <span>Biometric Attendance & Gate Control</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Real-time biometric device sync, arrival verification, and attendance registers for Nayab Grammar School.
+            Real-time biometric device sync, arrival verification, and attendance registers for Nayab English Grammer High School Mirwah.
           </p>
         </div>
 

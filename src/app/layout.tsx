@@ -6,9 +6,9 @@ import BottomNav from "@/components/layout/BottomNav";
 import AskNayabModal from "@/components/chatbot/AskNayabModal";
 
 export const metadata: Metadata = {
-  title: "Nayab Grammar School, Mirwah — Official Portal",
+  title: "Nayab English Grammer High School Mirwah — Official Portal",
   description:
-    "Official school management portal for Nayab Grammar School, Mirwah. Fast public result lookup, fee status tracking, announcements, and AI assistance.",
+    "Official school management portal for Nayab English Grammer High School Mirwah. Fast public result lookup, fee status tracking, announcements, and AI assistance.",
   icons: {
     icon: "/images/school-logo.png",
   },

@@ -62,7 +62,7 @@ export default function ReportCard({ student, result, onBack }: ReportCardProps)
             <div className="w-20 h-20 rounded-full bg-white p-1 border-2 border-[#D4AF37] flex items-center justify-center shrink-0 shadow-sm">
               <Image
                 src="/images/school-logo.png"
-                alt="Nayab Grammar School Emblem"
+                alt="Nayab English Grammer High School Mirwah Emblem"
                 width={76}
                 height={76}
                 className="w-full h-full object-contain"
@@ -70,8 +70,8 @@ export default function ReportCard({ student, result, onBack }: ReportCardProps)
               />
             </div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1B2A4A] uppercase">
-                NAYAB GRAMMAR SCHOOL
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#1B2A4A] uppercase">
+                NAYAB ENGLISH GRAMMER HIGH SCHOOL
               </h1>
               <p className="text-xs sm:text-sm font-semibold tracking-widest text-[#D4AF37] uppercase">
                 Mirwah Campus • Registered & Recognized Institution
@@ -300,7 +300,7 @@ export default function ReportCard({ student, result, onBack }: ReportCardProps)
             <div className="border-t border-slate-700 w-4/5 mx-auto pt-1 font-bold text-[#1B2A4A]">
               Principal
             </div>
-            <p className="text-[10px] text-slate-400">Nayab Grammar School</p>
+            <p className="text-[10px] text-slate-400">Nayab English Grammer High School Mirwah</p>
           </div>
         </div>
       </div>

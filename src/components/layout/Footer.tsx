@@ -13,14 +13,14 @@ export default function Footer() {
               <div className="w-12 h-12 rounded-full bg-white p-0.5 border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden shrink-0">
                 <Image
                   src="/images/school-logo.png"
-                  alt="Nayab Grammar School"
+                  alt="Nayab English Grammer High School Mirwah"
                   width={46}
                   height={46}
                   className="w-full h-full object-contain"
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-base leading-tight font-heading">NAYAB GRAMMAR SCHOOL</h3>
+                <h3 className="text-white font-bold text-sm sm:text-base leading-tight font-heading">NAYAB ENGLISH GRAMMER HIGH SCHOOL</h3>
                 <p className="text-[#D4AF37] text-xs font-semibold tracking-wider">Mirwah · Sindh</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function Footer() {
 
         {/* Bottom copyright */}
         <div className="pt-6 border-t border-white/10 text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p>© {new Date().getFullYear()} Nayab Grammar School, Mirwah. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Nayab English Grammer High School Mirwah. All rights reserved.</p>
           <p className="text-slate-500">
             Learn · Grow · Succeed
           </p>

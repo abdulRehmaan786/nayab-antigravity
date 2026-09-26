@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Calendar, CreditCard, Bell, ArrowRight, User, Award, Clock } from "lucide-react";
 
 export const metadata = {
-  title: "Parent Dashboard — Nayab Grammar School Mirwah",
+  title: "Parent Dashboard — Nayab English Grammer High School Mirwah",
   description: "Parent portal with children's academic performance, biometric attendance, and fee status.",
 };
 

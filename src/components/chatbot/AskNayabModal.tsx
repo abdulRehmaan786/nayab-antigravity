@@ -136,7 +136,7 @@ export default function AskNayabModal() {
               <div className="w-8 h-8 rounded-full bg-white p-0.5 border border-[#D4AF37] flex items-center justify-center">
                 <Image
                   src="/images/school-logo.png"
-                  alt="Nayab School Emblem"
+                  alt="Nayab English Grammer High School Mirwah Emblem"
                   width={30}
                   height={30}
                   className="rounded-full object-contain"

@@ -145,7 +145,7 @@ export default function AnnouncementsPage() {
 
                 <div className="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
                   <span>Authorized by: <strong className="text-slate-600">{item.publishedBy}</strong></span>
-                  <span className="text-[11px] text-slate-400">Nayab Grammar School, Mirwah</span>
+                  <span className="text-[11px] text-slate-400">Nayab English Grammer High School Mirwah</span>
                 </div>
               </div>
             );

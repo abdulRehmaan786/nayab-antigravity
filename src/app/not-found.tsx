@@ -9,7 +9,7 @@ export default function NotFound() {
         <div className="w-20 h-20 rounded-full bg-white p-1 border-2 border-[#D4AF37] mx-auto shadow flex items-center justify-center mb-6">
           <Image
             src="/images/school-logo.png"
-            alt="Nayab Grammar School Emblem"
+            alt="Nayab English Grammer High School Mirwah Emblem"
             width={76}
             height={76}
             className="w-full h-full object-contain"

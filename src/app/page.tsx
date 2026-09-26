@@ -39,13 +39,13 @@ export default async function HomePage() {
           <div className="lg:col-span-7 space-y-5 text-left">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-[#D4AF37]/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#D4AF37]">
               <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
-              <span>Nayab Grammar School — Mirwah</span>
+              <span>Nayab English Grammer High School — Mirwah</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight font-heading">
               Welcome to <br />
-              <span className="text-white">Nayab Grammar School</span> <br />
-              <span className="text-[#D4AF37]">Mirwah</span>
+              <span className="text-white">Nayab English Grammer</span> <br />
+              <span className="text-[#D4AF37]">High School Mirwah</span>
             </h1>
 
             <div className="text-lg sm:text-xl font-semibold text-[#D4AF37] tracking-wide">
@@ -78,7 +78,7 @@ export default async function HomePage() {
               <div className="relative aspect-[4/3] sm:aspect-[4/3] w-full overflow-hidden">
                 <Image
                   src="/images/students-hero.jpg"
-                  alt="Nayab Grammar School Students with Award Shields"
+                  alt="Nayab English Grammer High School Students with Award Shields"
                   fill
                   sizes="(max-width: 768px) 100vw, 500px"
                   className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
@@ -330,7 +330,7 @@ export default async function HomePage() {
                 Uniform Policy & Campus Timings
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-                Nayab Grammar School takes immense pride in student discipline, neatness, and punctual attendance.
+                Nayab English Grammer High School Mirwah takes immense pride in student discipline, neatness, and punctual attendance.
               </p>
 
               <div className="mt-6 space-y-3.5 text-xs sm:text-sm">

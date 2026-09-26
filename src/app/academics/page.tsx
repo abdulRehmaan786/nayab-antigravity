@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BookOpen, CheckCircle, Award, Sparkles, Clock, FileText, ChevronRight } from "lucide-react";
 
 export const metadata = {
-  title: "Academics — Nayab Grammar School Mirwah",
+  title: "Academics — Nayab English Grammer High School Mirwah",
   description: "Explore our academic curriculum, classes from Pre-school to Matriculation, and faculty standards.",
 };
 

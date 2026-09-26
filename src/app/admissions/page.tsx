@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CheckCircle2, FileText, Calendar, Clock, DollarSign, HelpCircle } from "lucide-react";
 
 export const metadata = {
-  title: "Admissions — Nayab Grammar School Mirwah",
+  title: "Admissions — Nayab English Grammer High School Mirwah",
   description: "Information regarding admission policy, age criteria, fee schedule, and registration process.",
 };
 
@@ -23,7 +23,7 @@ export default function AdmissionsPage() {
             <span>Admissions Open 2025–2026</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-heading">
-            Join Nayab Grammar School
+            Join Nayab English Grammer High School Mirwah
           </h1>
           <p className="mt-3 text-slate-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
             Nurturing young minds with knowledge, discipline, and purpose. Apply today for admission from Nursery to Class 10.

@@ -10,7 +10,7 @@ export interface SchoolQA {
 }
 
 export const SCHOOL_INFO = {
-  name: "Nayab Grammar School",
+  name: "Nayab English Grammer High School Mirwah",
   location: "Mirwah, Sindh, Pakistan",
   established: "2012",
   phone: "+92 301 2345670 / +92 312 9876543",
@@ -31,7 +31,7 @@ export const SCHOOL_INFO = {
     lateFeePolicy: "A nominal late fee surcharge of Rs. 100 is applied after the 15th of the month.",
     paymentMethods: [
       "School Accounts Office counter via cash or cross-cheque (Mon-Sat, 8:30 AM - 1:30 PM)",
-      "Direct Bank Deposit at HBL / MCB Mirwah Branch (Account Title: Nayab Grammar School)",
+      "Direct Bank Deposit at HBL / MCB Mirwah Branch (Account Title: Nayab English Grammer High School Mirwah)",
       "Online Banking / Raast / EasyPaisa / JazzCash using the unique student Roll Number as Challan Reference",
     ],
   },
@@ -53,7 +53,7 @@ export const SCHOOL_KNOWLEDGE_BASE: SchoolQA[] = [
     keywords: ["fee", "fees", "challan", "dues", "tuition", "voucher", "pay fee", "unpaid", "pending", "payment"],
     question: "How do I check fee status or pay monthly dues?",
     answer:
-      "To check fee status:\n1. Open the 'Fee Status' page from the menu or use the search bar on the homepage with your Class and Roll Number.\n2. You will see whether the current month's fee is Paid, Pending, or Overdue along with the receipt number if already paid.\n\nFee Payment Options:\n• Accounts Office Counter: Mon–Sat, 8:30 AM – 1:30 PM.\n• Online Bank Transfer / EasyPaisa / Raast to Nayab Grammar School account. Keep your transaction ID for receipt confirmation.",
+      "To check fee status:\n1. Open the 'Fee Status' page from the menu or use the search bar on the homepage with your Class and Roll Number.\n2. You will see whether the current month's fee is Paid, Pending, or Overdue along with the receipt number if already paid.\n\nFee Payment Options:\n• Accounts Office Counter: Mon–Sat, 8:30 AM – 1:30 PM.\n• Online Bank Transfer / EasyPaisa / Raast to Nayab English Grammer High School Mirwah account. Keep your transaction ID for receipt confirmation.",
     category: "fees",
     actionLink: {
       label: "Check Fee Status",
@@ -87,14 +87,14 @@ export const SCHOOL_KNOWLEDGE_BASE: SchoolQA[] = [
   },
   {
     keywords: ["admission", "admit", "apply", "enroll", "seat", "entry test", "documents", "age"],
-    question: "What is the admission procedure at Nayab Grammar School?",
+    question: "What is the admission procedure at Nayab English Grammer High School Mirwah?",
     answer:
       "Admissions are open for Nursery through Class 9 at the start of the academic year. Requirements:\n1. Completed Admission Application Form (available at the admin desk).\n2. Child's Birth Certificate (B-Form / NADRA).\n3. Previous School Leaving Certificate (SLC) and Result Card for Class 1 and above.\n4. 4 passport-size photographs of the student.\n5. Copy of Father's / Guardian's CNIC.\nAn age-appropriate diagnostic entry assessment in English, Urdu, and Mathematics is conducted for placement.",
     category: "admissions",
   },
   {
     keywords: ["contact", "phone", "number", "location", "address", "map", "email", "office", "principal"],
-    question: "How can I contact Nayab Grammar School administration?",
+    question: "How can I contact Nayab English Grammer High School Mirwah administration?",
     answer:
       "You can contact us via:\n• Phone: +92 301 2345670 / +92 312 9876543\n• Email: info@nayab.edu.pk / principal@nayab.edu.pk\n• Address: Main Campus, Mirwah, Sindh, Pakistan\n• Administration Visiting Hours: Monday to Thursday, 9:00 AM – 1:00 PM.",
     category: "general",

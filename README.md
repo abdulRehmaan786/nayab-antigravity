@@ -1,7 +1,7 @@
-# 🎓 Nayab Grammar School, Mirwah — School Management System
+# 🎓 Nayab English Grammer High School Mirwah — School Management System
 ### Final Year Capstone Project (Production-Grade Web Application)
 
-A minimalist, high-speed, mobile-first School Management System built specifically for **Nayab Grammar School, Mirwah**. Designed with modern product principles (Linear / Stripe aesthetic) to ensure non-technical parents and staff can manage marks, verify fee statuses, record biometric gate attendances, and publish school notices without friction.
+A minimalist, high-speed, mobile-first School Management System built specifically for **Nayab English Grammer High School Mirwah**. Designed with modern product principles (Linear / Stripe aesthetic) to ensure non-technical parents and staff can manage marks, verify fee statuses, record biometric gate attendances, and publish school notices without friction.
 
 ---
 
@@ -98,7 +98,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🏫 About Nayab Grammar School, Mirwah
+## 🏫 About Nayab English Grammer High School Mirwah
 - **Location**: Mirwah, Sindh, Pakistan
 - **Established**: 2012
 - **Colors**: Navy Blue (`#1B2A4A`) & Warm Gold (`#D4AF37`)

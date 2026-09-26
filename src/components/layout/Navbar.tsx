@@ -56,7 +56,7 @@ export default function Navbar() {
             <div className="w-12 h-12 rounded-full bg-white p-0.5 shadow flex items-center justify-center overflow-hidden border-2 border-[#D4AF37] group-hover:scale-105 transition-transform duration-200">
               <Image
                 src="/images/school-logo.png"
-                alt="Nayab Grammar School Logo"
+                alt="Nayab English Grammer High School Mirwah Logo"
                 width={48}
                 height={48}
                 className="w-full h-full object-contain"
@@ -64,13 +64,13 @@ export default function Navbar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg sm:text-xl tracking-tight leading-none text-white group-hover:text-[#D4AF37] transition-colors">
-                NAYAB GRAMMAR SCHOOL
+              <span className="font-extrabold text-base sm:text-lg tracking-tight leading-tight text-white group-hover:text-[#D4AF37] transition-colors">
+                NAYAB ENGLISH GRAMMER HIGH SCHOOL
               </span>
-              <span className="text-[11px] text-slate-300 tracking-wider uppercase mt-1 font-medium flex items-center gap-1.5">
-                <span>Mirwah</span>
+              <span className="text-[11px] text-slate-300 tracking-wider uppercase mt-0.5 font-medium flex items-center gap-1.5">
+                <span className="text-[#D4AF37] font-bold">Mirwah</span>
                 <span className="inline-block w-1 h-1 rounded-full bg-[#D4AF37]"></span>
-                <span className="text-[#D4AF37] font-semibold">Learn · Grow · Succeed</span>
+                <span className="text-slate-300 font-medium">Learn · Grow · Succeed</span>
               </span>
             </div>
           </Link>

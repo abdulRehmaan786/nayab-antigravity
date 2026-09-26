@@ -159,7 +159,7 @@ export default function TeacherSidebar({ session }: TeacherSidebarProps) {
             <div>
               <h2 className="font-bold text-sm tracking-tight leading-tight">Teacher Console</h2>
               <span className="text-[10px] text-[#D4AF37] uppercase font-bold flex items-center gap-1">
-                <GraduationCap className="w-3 h-3" /> Nayab Grammar School
+                <GraduationCap className="w-3 h-3" /> Nayab English Grammer High School Mirwah
               </span>
             </div>
           </div>

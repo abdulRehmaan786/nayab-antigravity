@@ -1,8 +1,8 @@
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 
 export const metadata = {
-  title: "Contact Us — Nayab Grammar School Mirwah",
-  description: "Get in touch with Nayab Grammar School campus in Mirwah, Sindh. Phone numbers, location, and office timings.",
+  title: "Contact Us — Nayab English Grammer High School Mirwah",
+  description: "Get in touch with Nayab English Grammer High School campus in Mirwah, Sindh. Phone numbers, location, and office timings.",
 };
 
 export default function ContactPage() {
@@ -35,7 +35,7 @@ export default function ContactPage() {
                 <MapPin className="w-5 h-5 text-[#D4AF37]" />
               </div>
               <div>
-                <p className="font-semibold text-sm text-slate-900">Nayab Grammar School</p>
+                <p className="font-semibold text-sm text-slate-900">Nayab English Grammer High School Mirwah</p>
                 <p className="text-xs text-slate-600 mt-0.5">Main Bypass Road, Near Degree College, Mirwah, Sindh, Pakistan</p>
               </div>
             </div>

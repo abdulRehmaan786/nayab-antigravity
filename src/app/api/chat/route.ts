@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     if (!message || typeof message !== "string" || !message.trim()) {
       return NextResponse.json(
-        { reply: "Hello! How can I assist you with Nayab Grammar School today?" },
+        { reply: "Hello! How can I assist you with Nayab English Grammer High School Mirwah today?" },
         { status: 400 }
       );
     }
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
           return NextResponse.json({
             ok: true,
-            reply: `Here are the latest official announcements and schedule notices from Nayab Grammar School:\n\n${liveNoticesSummary}\n\nYou can also browse all notices on our Announcements board.`,
+            reply: `Here are the latest official announcements and schedule notices from Nayab English Grammer High School Mirwah:\n\n${liveNoticesSummary}\n\nYou can also browse all notices on our Announcements board.`,
             actionLink: {
               label: "View All Announcements",
               href: "/announcements",
@@ -117,14 +117,14 @@ export async function POST(req: NextRequest) {
     ) {
       return NextResponse.json({
         ok: true,
-        reply: `Assalam-o-Alaikum! Welcome to Nayab Grammar School, Mirwah. How can I assist you today?\n\nYou can ask me about:\n1. How to check exam results\n2. Fee submission and dues\n3. Daily school timings\n4. School uniform guidelines\n5. Upcoming holidays and announcements`,
+        reply: `Assalam-o-Alaikum! Welcome to Nayab English Grammer High School Mirwah. How can I assist you today?\n\nYou can ask me about:\n1. How to check exam results\n2. Fee submission and dues\n3. Daily school timings\n4. School uniform guidelines\n5. Upcoming holidays and announcements`,
       });
     }
 
     // Out-of-scope or unanswerable query: Polite refusal as required
     return NextResponse.json({
       ok: true,
-      reply: `I am the virtual assistant for Nayab Grammar School, Mirwah. I only have information regarding our school's admissions, exam results, fees, timings, uniform rules, and announcements.\n\nFor any other inquiries, please contact our administration office at ${SCHOOL_INFO.phone} or visit during official school hours.`,
+      reply: `I am the virtual assistant for Nayab English Grammer High School Mirwah. I only have information regarding our school's admissions, exam results, fees, timings, uniform rules, and announcements.\n\nFor any other inquiries, please contact our administration office at ${SCHOOL_INFO.phone} or visit during official school hours.`,
     });
   } catch (error) {
     console.error("Chat API error:", error);

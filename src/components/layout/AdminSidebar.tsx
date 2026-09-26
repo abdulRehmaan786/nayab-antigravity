@@ -20,6 +20,7 @@ import {
   X,
   Camera,
   FileCheck,
+  Loader2,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -46,7 +47,24 @@ const navItems = [
 
 export default function AdminSidebar({ session }: AdminSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
+
+  const handleSignOut = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      console.error("Sign out error:", err);
+    } finally {
+      window.location.href = "/login";
+    }
+  };
 
   return (
     <>
@@ -121,13 +139,23 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
               <ArrowLeft className="w-4 h-4 text-[#D4AF37]" />
               <span>Back to Public Website</span>
             </Link>
-            <form action="/api/auth/logout" method="POST">
+            <form action="/api/auth/logout" method="POST" onSubmit={handleSignOut}>
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 text-xs font-bold text-rose-300 hover:text-rose-100 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-900/60 py-2.5 rounded-xl transition"
+                disabled={isLoggingOut}
+                className="w-full flex items-center justify-center gap-2 text-xs font-bold text-rose-300 hover:text-rose-100 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-900/60 py-2.5 rounded-xl transition cursor-pointer disabled:opacity-60"
               >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
+                {isLoggingOut ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-rose-400" />
+                    <span>Signing Out...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -196,13 +224,23 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
             <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>Public Website</span>
           </Link>
-          <form action="/api/auth/logout" method="POST">
+          <form action="/api/auth/logout" method="POST" onSubmit={handleSignOut}>
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-rose-300 hover:text-rose-100 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-900/60 py-2 rounded-xl transition cursor-pointer"
+              disabled={isLoggingOut}
+              className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-rose-300 hover:text-rose-100 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-900/60 py-2 rounded-xl transition cursor-pointer disabled:opacity-60"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Sign Out</span>
+              {isLoggingOut ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-400" />
+                  <span>Signing Out...</span>
+                </>
+              ) : (
+                <>
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out</span>
+                </>
+              )}
             </button>
           </form>
         </div>

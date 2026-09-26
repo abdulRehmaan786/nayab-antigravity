@@ -33,9 +33,16 @@ export default function Navbar() {
   }, [pathname]);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (e) {
+      console.error("Logout error:", e);
+    }
     setUser(null);
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   const navLinks = [

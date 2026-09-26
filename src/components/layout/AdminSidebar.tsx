@@ -51,7 +51,7 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
   return (
     <>
       {/* Mobile Top App Bar (< md) */}
-      <div className="md:hidden sticky top-0 z-40 bg-[#0D1B3D] text-white border-b border-[#1E3A8A]/40 px-4 py-3 shadow-md flex items-center justify-between">
+      <div className="md:hidden sticky top-0 z-40 bg-[#0D1B3D] text-white border-b border-[#1E3A8A]/40 px-4 py-3 shadow-md flex items-center justify-between no-print print:hidden">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-white p-0.5 border border-[#D4AF37] flex items-center justify-center overflow-hidden shrink-0 shadow">
             <Image
@@ -83,7 +83,7 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
 
       {/* Mobile Slide-Down Drawer (< md) */}
       {isOpen && (
-        <div className="md:hidden fixed inset-x-0 top-[57px] bottom-0 z-30 bg-[#071026]/95 backdrop-blur-md overflow-y-auto p-4 space-y-3 animate-in slide-in-from-top duration-200">
+        <div className="md:hidden fixed inset-x-0 top-[57px] bottom-0 z-30 bg-[#071026]/95 backdrop-blur-md overflow-y-auto p-4 space-y-3 animate-in slide-in-from-top duration-200 no-print print:hidden">
           <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-xs">
             <p className="text-slate-400 text-[10px]">Logged in as:</p>
             <p className="font-bold text-white truncate text-sm">{session.name}</p>
@@ -135,7 +135,7 @@ export default function AdminSidebar({ session }: AdminSidebarProps) {
       )}
 
       {/* Desktop Sticky Sidebar (>= md) */}
-      <aside className="hidden md:flex w-64 bg-[#0D1B3D] text-white flex-col shrink-0 border-r border-[#1E3A8A]/40 shadow-xl min-h-screen sticky top-0 self-start">
+      <aside className="hidden md:flex w-64 bg-[#0D1B3D] text-white flex-col shrink-0 border-r border-[#1E3A8A]/40 shadow-xl min-h-screen sticky top-0 self-start no-print print:hidden">
         {/* Brand Header */}
         <div className="p-5 border-b border-white/10">
           <div className="flex items-center gap-3">

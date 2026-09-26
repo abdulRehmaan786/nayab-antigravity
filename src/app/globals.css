@@ -94,20 +94,20 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     display: block !important;
   }
 
-  /* Full A4 Page Frame (Exactly 275mm tall to fill the entire A4 paper) */
+  /* Full A4 Page Frame (Calibrated to fit standard A4 paper without cutting off) */
   .printable-card {
     box-shadow: none !important;
     border: 3px double #0D1B3D !important;
     outline: 1px solid #D4AF37 !important;
-    outline-offset: -5px !important;
+    outline-offset: -4px !important;
     border-radius: 0 !important;
-    padding: 7mm 9mm !important;
+    padding: 5mm 7mm !important;
     margin: 0 auto !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-height: 275mm !important;
-    height: 275mm !important;
-    max-height: 275mm !important;
+    min-height: 268mm !important;
+    height: 268mm !important;
+    max-height: 270mm !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
@@ -116,7 +116,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     break-inside: avoid !important;
     page-break-after: avoid !important;
     page-break-before: avoid !important;
-    overflow: hidden !important;
   }
 
   table {

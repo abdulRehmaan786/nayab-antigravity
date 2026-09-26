@@ -20,6 +20,7 @@ import {
   Building,
   Calendar,
   ExternalLink,
+  Eye,
 } from "lucide-react";
 import PrintableSLC from "@/components/admin/PrintableSLC";
 import { SchoolLeavingCertificateData, StudentData } from "@/lib/types";
@@ -438,15 +439,24 @@ export default function AdminSLCPage() {
                           </span>
                         </td>
                         <td className="p-3 text-right">
-                          <div className="flex items-center justify-end gap-2">
+                          <div className="flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => setSelectedForPrint(c)}
-                              className="inline-flex items-center gap-1 bg-[#0D1B3D] hover:bg-[#1E3A8A] text-white px-2.5 py-1.5 rounded-lg font-bold text-[11px] shadow-xs transition cursor-pointer"
-                              title="Print Official A4 Certificate"
+                              className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1.5 rounded-lg font-bold text-[11px] border border-slate-300 transition cursor-pointer"
+                              title="Preview Certificate on Screen"
+                            >
+                              <Eye className="w-3.5 h-3.5 text-blue-600" />
+                              <span>Preview</span>
+                            </button>
+                            <Link
+                              href={`/admin/slc/print?id=${encodeURIComponent(c.id)}&autoprint=true`}
+                              target="_blank"
+                              className="inline-flex items-center gap-1 bg-[#0D1B3D] hover:bg-[#1E3A8A] text-white px-2.5 py-1.5 rounded-lg font-bold text-[11px] shadow-xs transition"
+                              title="Print Official A4 Certificate (Opens Print Dialog)"
                             >
                               <Printer className="w-3.5 h-3.5 text-[#D4AF37]" />
                               <span>Print SLC</span>
-                            </button>
+                            </Link>
                             <button
                               onClick={() => handleRevert(c.id)}
                               disabled={reverting}
@@ -533,13 +543,15 @@ export default function AdminSLCPage() {
                             </Link>
 
                             {s.slc && (
-                              <button
-                                onClick={() => setSelectedForPrint(s.slc!)}
-                                className="inline-flex items-center gap-1 bg-[#0D1B3D] hover:bg-[#1E3A8A] text-white px-2 py-1 rounded text-[11px] font-bold transition shadow-xs cursor-pointer"
+                              <Link
+                                href={`/admin/slc/print?id=${encodeURIComponent(s.slc.id)}&autoprint=true`}
+                                target="_blank"
+                                className="inline-flex items-center gap-1 bg-[#0D1B3D] hover:bg-[#1E3A8A] text-white px-2 py-1 rounded text-[11px] font-bold transition shadow-xs"
+                                title="Print Official A4 Certificate"
                               >
                                 <Printer className="w-3 h-3 text-[#D4AF37]" />
                                 <span>Print SLC</span>
-                              </button>
+                              </Link>
                             )}
                           </div>
                         </td>

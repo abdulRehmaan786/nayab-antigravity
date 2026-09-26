@@ -4,15 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogIn, LogOut, LayoutDashboard, User, MapPin } from "lucide-react";
-
-function FacebookIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-    </svg>
-  );
-}
+import { Menu, X, LogIn, LogOut, LayoutDashboard, User } from "lucide-react";
 
 interface UserSession {
   userId: string;
@@ -58,29 +50,36 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 bg-[#0D1B3D] text-white shadow-md border-b border-[#D4AF37]/30 font-sans">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between min-h-[4.25rem] sm:min-h-[4.75rem] py-2 sm:py-2.5 gap-2">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+        <div className="flex items-center justify-between min-h-[4rem] sm:min-h-[4.5rem] py-2 gap-2">
           {/* Brand Logo & Name */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 group shrink-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white p-0.5 shadow flex items-center justify-center overflow-hidden border-2 border-[#D4AF37] group-hover:scale-105 transition-transform duration-200 shrink-0">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white p-0.5 shadow flex items-center justify-center overflow-hidden border-2 border-[#D4AF37] group-hover:scale-105 transition-transform duration-200 shrink-0">
               <Image
                 src="/images/school-logo.png"
                 alt="Nayab English Grammer High School Mirwah Logo"
-                width={48}
-                height={48}
+                width={44}
+                height={44}
                 className="w-full h-full object-contain"
                 priority
               />
             </div>
             <div className="flex flex-col justify-center min-w-0">
-              <span className="font-extrabold text-xs sm:text-sm md:text-base lg:text-sm xl:text-lg tracking-tight leading-snug text-white group-hover:text-[#D4AF37] transition-colors">
-                <span className="hidden sm:inline whitespace-nowrap">NAYAB ENGLISH GRAMMER HIGH SCHOOL</span>
-                <span className="sm:hidden block font-black leading-tight">
-                  NAYAB ENGLISH GRAMMER<br/>
-                  <span className="text-[10px] text-slate-200 font-bold tracking-wide">HIGH SCHOOL MIRWAH</span>
+              <span className="font-extrabold tracking-tight leading-snug text-white group-hover:text-[#D4AF37] transition-colors">
+                {/* On 2XL & XL screens (>=1280px) */}
+                <span className="hidden xl:inline text-sm sm:text-base xl:text-lg whitespace-nowrap">
+                  NAYAB ENGLISH GRAMMER HIGH SCHOOL
+                </span>
+                {/* On Medium & Large screens (640px - 1279px) */}
+                <span className="hidden sm:inline xl:hidden text-xs sm:text-sm whitespace-nowrap font-black">
+                  NAYAB ENGLISH GRAMMAR
+                </span>
+                {/* On Mobile screens (<640px) */}
+                <span className="sm:hidden block text-xs font-black leading-tight">
+                  NAYAB ENGLISH GRAMMAR
                 </span>
               </span>
-              <span className="hidden sm:flex text-[10px] sm:text-[11px] text-slate-300 tracking-wider uppercase font-medium items-center gap-1.5 whitespace-nowrap mt-0.5">
+              <span className="text-[10px] sm:text-[11px] text-slate-300 tracking-wider uppercase font-medium flex items-center gap-1.5 whitespace-nowrap mt-0.5">
                 <span className="text-[#D4AF37] font-bold">Mirwah</span>
                 <span className="inline-block w-1 h-1 rounded-full bg-[#D4AF37]"></span>
                 <span className="truncate">Learn · Grow · Succeed</span>
@@ -89,7 +88,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5">
             {navLinks.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -98,7 +97,7 @@ export default function Navbar() {
                   href={item.href}
                   className={`px-2 xl:px-3 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition-all duration-150 whitespace-nowrap ${
                     isActive
-                      ? "bg-white/15 text-[#D4AF37] shadow-inner font-semibold"
+                      ? "bg-white/15 text-[#D4AF37] shadow-inner font-bold"
                       : "text-slate-200 hover:bg-white/10 hover:text-white"
                   }`}
                 >
@@ -108,30 +107,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Desktop Auth & Social CTA */}
-          <div className="hidden lg:flex items-center gap-1.5 xl:gap-2 shrink-0">
-            <a
-              href="https://www.facebook.com/nayabhs.mirwah"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-slate-300 hover:text-[#1877F2] hover:bg-white/10 rounded-lg transition"
-              title="Official Facebook Page"
-              aria-label="Facebook Page"
-            >
-              <FacebookIcon className="w-4 h-4 fill-current" />
-            </a>
-
-            <a
-              href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-slate-300 hover:text-[#D4AF37] hover:bg-white/10 rounded-lg transition mr-1"
-              title="Campus Location on Google Maps"
-              aria-label="Google Maps Location"
-            >
-              <MapPin className="w-4 h-4" />
-            </a>
-
+          {/* Desktop Auth CTA */}
+          <div className="hidden lg:flex items-center gap-2 shrink-0">
             {user ? (
               <div className="flex items-center gap-2">
                 <Link
@@ -141,14 +118,14 @@ export default function Navbar() {
                   <LayoutDashboard className="w-4 h-4" />
                   <span>Dashboard</span>
                 </Link>
-                <div className="hidden xl:flex items-center gap-2 pl-2 border-l border-white/20 text-xs text-slate-300">
+                <div className="hidden 2xl:flex items-center gap-2 pl-2 border-l border-white/20 text-xs text-slate-300">
                   <User className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span className="font-medium truncate max-w-[120px]">{user.name}</span>
+                  <span className="font-medium truncate max-w-[100px]">{user.name}</span>
                 </div>
                 <button
                   onClick={handleLogout}
                   title="Log out"
-                  className="p-1.5 xl:p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition"
+                  className="p-1.5 xl:p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -156,7 +133,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 bg-white text-[#0D1B3D] hover:bg-slate-100 px-4 py-1.5 xl:px-5 xl:py-2 rounded-lg text-xs xl:text-sm font-bold transition shadow-sm"
+                className="flex items-center gap-1.5 bg-white text-[#0D1B3D] hover:bg-slate-100 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-lg text-xs xl:text-sm font-bold transition shadow-sm"
               >
                 <LogIn className="w-4 h-4 text-[#0D1B3D]" />
                 <span>Login</span>
@@ -176,17 +153,18 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="text-xs bg-white text-[#0D1B3D] px-3 py-1.5 rounded-lg font-semibold shadow-xs whitespace-nowrap"
+                className="text-xs bg-white text-[#0D1B3D] px-3 py-1.5 rounded-lg font-bold shadow-xs whitespace-nowrap"
               >
                 Login
               </Link>
             )}
+
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-1.5 sm:p-2 rounded-lg text-slate-200 hover:text-white hover:bg-white/10 focus:outline-none"
-              aria-label="Toggle Navigation Menu"
+              className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition focus:outline-none cursor-pointer"
+              aria-label="Toggle navigation menu"
             >
-              {isOpen ? <X className="w-6 h-6 text-[#D4AF37]" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? <X className="w-5 h-5 text-[#D4AF37]" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -213,29 +191,6 @@ export default function Navbar() {
             );
           })}
 
-          {/* Mobile Social Links */}
-          <div className="pt-2 flex items-center justify-around py-2.5 px-4 bg-white/5 rounded-xl border border-white/10 text-xs">
-            <a
-              href="https://www.facebook.com/nayabhs.mirwah"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-slate-300 hover:text-[#1877F2] font-semibold transition"
-            >
-              <FacebookIcon className="w-4 h-4 fill-current text-[#1877F2]" />
-              <span>Facebook Page</span>
-            </a>
-            <span className="text-slate-600">|</span>
-            <a
-              href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-slate-300 hover:text-[#D4AF37] font-semibold transition"
-            >
-              <MapPin className="w-4 h-4 text-[#D4AF37]" />
-              <span>Google Maps</span>
-            </a>
-          </div>
-
           <div className="pt-3 border-t border-slate-800 mt-2">
             {user ? (
               <div className="space-y-2">
@@ -255,7 +210,7 @@ export default function Navbar() {
                     setIsOpen(false);
                     handleLogout();
                   }}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm text-rose-400 hover:bg-rose-950/30"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm text-rose-400 hover:bg-rose-950/30 cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign Out</span>

@@ -1,6 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, Mail, MapPin, Clock, ShieldCheck } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, ExternalLink } from "lucide-react";
+
+function FacebookIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
@@ -27,8 +35,25 @@ export default function Footer() {
             <p className="text-xs text-slate-400 leading-relaxed">
               Committed to academic excellence, moral discipline, and nurturing future leaders through holistic education in Mirwah.
             </p>
-            <div className="text-xs text-[#D4AF37] font-semibold flex items-center gap-1.5">
-              <span>Learn · Grow · Succeed</span>
+            <div className="pt-1 flex items-center gap-2">
+              <a
+                href="https://www.facebook.com/nayabhs.mirwah"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-[#1877F2] hover:bg-[#166fe5] text-white text-xs px-3 py-1.5 rounded-lg font-bold shadow-xs transition hover:scale-[1.02]"
+              >
+                <FacebookIcon className="w-3.5 h-3.5 fill-current" />
+                <span>Facebook Page</span>
+              </a>
+              <a
+                href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-[#D4AF37] text-xs px-3 py-1.5 rounded-lg font-bold border border-[#D4AF37]/30 transition hover:scale-[1.02]"
+              >
+                <MapPin className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Google Maps</span>
+              </a>
             </div>
           </div>
 
@@ -91,20 +116,43 @@ export default function Footer() {
           {/* Contact Details */}
           <div>
             <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-b border-white/10 pb-2 font-heading">
-              Contact Us
+              Contact & Location
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-300">
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 group">
                 <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                <span>Main Bypass Road, Mirwah, Sindh, Pakistan</span>
+                <div>
+                  <a
+                    href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition group-hover:text-[#D4AF37]"
+                  >
+                    Main Bypass Road, Mirwah, Sindh, Pakistan
+                    <span className="block text-[11px] text-[#D4AF37] font-semibold mt-0.5">
+                      📍 Open in Google Maps ↗
+                    </span>
+                  </a>
+                </div>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#D4AF37] shrink-0" />
-                <span>+92 (0243) 720191</span>
+                <span>+92 (0243) 720191 / +92 300 1234567</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#D4AF37] shrink-0" />
                 <span>info@nayab.edu.pk</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <a
+                  href="https://www.facebook.com/nayabhs.mirwah"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-[#1877F2] hover:text-[#4294ff] font-semibold transition"
+                >
+                  <FacebookIcon className="w-4 h-4 fill-current" />
+                  <span>fb.com/nayabhs.mirwah ↗</span>
+                </a>
               </li>
               <li className="pt-2">
                 <Link
@@ -121,9 +169,27 @@ export default function Footer() {
         {/* Bottom copyright */}
         <div className="pt-6 border-t border-white/10 text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p>© {new Date().getFullYear()} Nayab English Grammer High School Mirwah. All rights reserved.</p>
-          <p className="text-slate-500">
-            Learn · Grow · Succeed
-          </p>
+          <div className="flex items-center gap-4 text-xs">
+            <a
+              href="https://www.facebook.com/nayabhs.mirwah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-[#1877F2] flex items-center gap-1 transition"
+            >
+              <FacebookIcon className="w-3.5 h-3.5 fill-current" />
+              <span>Facebook</span>
+            </a>
+            <span className="text-slate-600">•</span>
+            <a
+              href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-[#D4AF37] flex items-center gap-1 transition"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>Campus Map</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>

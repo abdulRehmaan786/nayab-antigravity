@@ -4,7 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogIn, LogOut, LayoutDashboard, User } from "lucide-react";
+import { Menu, X, LogIn, LogOut, LayoutDashboard, User, MapPin } from "lucide-react";
+
+function FacebookIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+    </svg>
+  );
+}
 
 interface UserSession {
   userId: string;
@@ -100,8 +108,30 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Desktop Auth CTA */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
+          {/* Desktop Auth & Social CTA */}
+          <div className="hidden lg:flex items-center gap-1.5 xl:gap-2 shrink-0">
+            <a
+              href="https://www.facebook.com/nayabhs.mirwah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-slate-300 hover:text-[#1877F2] hover:bg-white/10 rounded-lg transition"
+              title="Official Facebook Page"
+              aria-label="Facebook Page"
+            >
+              <FacebookIcon className="w-4 h-4 fill-current" />
+            </a>
+
+            <a
+              href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-slate-300 hover:text-[#D4AF37] hover:bg-white/10 rounded-lg transition mr-1"
+              title="Campus Location on Google Maps"
+              aria-label="Google Maps Location"
+            >
+              <MapPin className="w-4 h-4" />
+            </a>
+
             {user ? (
               <div className="flex items-center gap-2">
                 <Link
@@ -182,6 +212,29 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          {/* Mobile Social Links */}
+          <div className="pt-2 flex items-center justify-around py-2.5 px-4 bg-white/5 rounded-xl border border-white/10 text-xs">
+            <a
+              href="https://www.facebook.com/nayabhs.mirwah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-slate-300 hover:text-[#1877F2] font-semibold transition"
+            >
+              <FacebookIcon className="w-4 h-4 fill-current text-[#1877F2]" />
+              <span>Facebook Page</span>
+            </a>
+            <span className="text-slate-600">|</span>
+            <a
+              href="https://maps.app.goo.gl/G9Zwdki6xpG3QZ4x5"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-slate-300 hover:text-[#D4AF37] font-semibold transition"
+            >
+              <MapPin className="w-4 h-4 text-[#D4AF37]" />
+              <span>Google Maps</span>
+            </a>
+          </div>
 
           <div className="pt-3 border-t border-slate-800 mt-2">
             {user ? (

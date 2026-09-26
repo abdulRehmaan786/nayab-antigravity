@@ -142,4 +142,5 @@ export interface AuthSession {
   role: "ADMIN" | "TEACHER";
   assignedClasses: string[];
   assignedSubjects: TeacherSubjectAssignment[];
+  classTeacherOf?: string | null;
 }

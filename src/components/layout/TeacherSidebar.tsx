@@ -15,6 +15,7 @@ import {
   BookOpen,
   Menu,
   X,
+  ClipboardCheck,
 } from "lucide-react";
 import { TeacherSubjectAssignment } from "@/lib/types";
 
@@ -24,12 +25,14 @@ interface TeacherSidebarProps {
     name: string;
     email: string;
     role: string;
+    classTeacherOf?: string | null;
     assignedSubjects?: TeacherSubjectAssignment[];
   };
 }
 
 const navItems = [
   { name: "Teacher Overview", href: "/teacher", icon: LayoutDashboard },
+  { name: "Take Class Attendance", href: "/teacher/class-attendance", icon: ClipboardCheck, isClassTeacherLink: true },
   { name: "Subject Marks Entry", href: "/teacher/marks-entry", icon: FileSpreadsheet },
   { name: "My Attendance Calendar", href: "/teacher/attendance", icon: Calendar },
   { name: "Class Notices", href: "/teacher/notices", icon: Bell },
@@ -80,6 +83,15 @@ export default function TeacherSidebar({ session }: TeacherSidebarProps) {
             <p className="font-bold text-white text-sm">{session.name}</p>
             <p className="text-[10px] text-slate-400">{session.email}</p>
 
+            {session.classTeacherOf && (
+              <div className="pt-2 border-t border-white/10">
+                <div className="inline-flex items-center gap-1.5 text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">
+                  <GraduationCap className="w-3 h-3 text-emerald-400" />
+                  <span>Class Teacher: {session.classTeacherOf}</span>
+                </div>
+              </div>
+            )}
+
             {session.assignedSubjects && session.assignedSubjects.length > 0 && (
               <div className="pt-2 border-t border-white/10">
                 <p className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
@@ -116,6 +128,11 @@ export default function TeacherSidebar({ session }: TeacherSidebarProps) {
                 >
                   <Icon className="w-4 h-4 text-[#D4AF37]" />
                   <span>{item.name}</span>
+                  {item.isClassTeacherLink && session.classTeacherOf && (
+                    <span className="ml-auto text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-extrabold">
+                      {session.classTeacherOf}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -171,6 +188,15 @@ export default function TeacherSidebar({ session }: TeacherSidebarProps) {
               <p className="text-[10px] text-slate-400 truncate">{session.email}</p>
             </div>
 
+            {session.classTeacherOf && (
+              <div className="pt-2 border-t border-white/10">
+                <div className="inline-flex items-center gap-1.5 text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">
+                  <GraduationCap className="w-3 h-3 text-emerald-400" />
+                  <span>Class Teacher: {session.classTeacherOf}</span>
+                </div>
+              </div>
+            )}
+
             {session.assignedSubjects && session.assignedSubjects.length > 0 && (
               <div className="pt-2 border-t border-white/10">
                 <p className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider flex items-center gap-1 mb-1">
@@ -208,6 +234,11 @@ export default function TeacherSidebar({ session }: TeacherSidebarProps) {
               >
                 <Icon className="w-4 h-4 text-[#D4AF37]" />
                 <span>{item.name}</span>
+                {item.isClassTeacherLink && session.classTeacherOf && (
+                  <span className="ml-auto text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-extrabold">
+                    {session.classTeacherOf}
+                  </span>
+                )}
               </Link>
             );
           })}

@@ -22,6 +22,7 @@ export async function GET() {
         role: true,
         assignedClasses: true,
         assignedSubjects: true,
+        classTeacherOf: true,
         createdAt: true,
       },
     });
@@ -40,6 +41,7 @@ export async function GET() {
         ...t,
         assignedClasses: classes,
         assignedSubjects: subjects,
+        classTeacherOf: t.classTeacherOf || null,
       };
     });
 
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, email, password, assignedClasses, assignedSubjects } = body;
+    const { name, email, password, assignedClasses, assignedSubjects, classTeacherOf } = body;
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -88,6 +90,7 @@ export async function POST(req: NextRequest) {
         role: "TEACHER",
         assignedClasses: JSON.stringify(assignedClasses || []),
         assignedSubjects: JSON.stringify(assignedSubjects || []),
+        classTeacherOf: classTeacherOf ? String(classTeacherOf).trim() : null,
       },
     });
 
@@ -99,6 +102,7 @@ export async function POST(req: NextRequest) {
         email: teacher.email,
         assignedClasses: assignedClasses || [],
         assignedSubjects: assignedSubjects || [],
+        classTeacherOf: teacher.classTeacherOf || null,
       },
     });
   } catch (error) {
@@ -115,7 +119,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, name, assignedClasses, assignedSubjects, password } = body;
+    const { id, name, assignedClasses, assignedSubjects, password, classTeacherOf } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Teacher ID is required." }, { status: 400 });
@@ -125,6 +129,10 @@ export async function PUT(req: NextRequest) {
       assignedClasses: JSON.stringify(assignedClasses || []),
       assignedSubjects: JSON.stringify(assignedSubjects || []),
     };
+
+    if (classTeacherOf !== undefined) {
+      updateData.classTeacherOf = classTeacherOf ? String(classTeacherOf).trim() : null;
+    }
 
     if (name) updateData.name = name.trim();
     if (password && password.trim().length >= 6) {
@@ -144,6 +152,7 @@ export async function PUT(req: NextRequest) {
         email: updated.email,
         assignedClasses: assignedClasses || [],
         assignedSubjects: assignedSubjects || [],
+        classTeacherOf: updated.classTeacherOf || null,
       },
     });
   } catch (error) {

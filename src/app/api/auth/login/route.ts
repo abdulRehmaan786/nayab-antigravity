@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
       role: user.role as "ADMIN" | "TEACHER",
       assignedClasses,
       assignedSubjects,
+      classTeacherOf: user.classTeacherOf || null,
     };
 
     const token = await createAuthToken(sessionPayload);

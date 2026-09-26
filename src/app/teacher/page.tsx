@@ -16,6 +16,7 @@ import {
   ExternalLink,
   DollarSign,
   Briefcase,
+  GraduationCap,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -57,11 +58,41 @@ export default async function TeacherOverviewPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#F2F4F7] text-[#0D1B3D] border border-slate-200 px-3.5 py-2 rounded-xl text-xs font-semibold">
-          <Calendar className="w-3.5 h-3.5 text-[#1E3A8A]" />
-          <span>09 May, 2025</span>
+        <div className="flex items-center gap-2">
+          {session?.classTeacherOf && (
+            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs">
+              <GraduationCap className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Class Teacher: {session.classTeacherOf}</span>
+            </span>
+          )}
+          <div className="flex items-center gap-2 bg-[#F2F4F7] text-[#0D1B3D] border border-slate-200 px-3.5 py-2 rounded-xl text-xs font-semibold">
+            <Calendar className="w-3.5 h-3.5 text-[#1E3A8A]" />
+            <span>09 May, 2025</span>
+          </div>
         </div>
       </div>
+
+      {/* Class Teacher Dedicated Action Banner */}
+      {session?.classTeacherOf && (
+        <div className="bg-gradient-to-r from-[#0F392B] to-[#1B2A4A] text-white p-5 rounded-2xl border border-emerald-500/30 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
+              <GraduationCap className="w-3.5 h-3.5" /> Class Teacher Privileges
+            </span>
+            <h2 className="text-base sm:text-lg font-bold text-white">Daily Attendance for {session.classTeacherOf}</h2>
+            <p className="text-xs text-slate-300">
+              You are assigned as the Class Teacher for {session.classTeacherOf}. Record today's student roll-call and punctuality.
+            </p>
+          </div>
+          <Link
+            href="/teacher/class-attendance"
+            className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#e0bc45] text-[#111C32] px-4 py-2 rounded-xl text-xs font-black shadow transition whitespace-nowrap self-start sm:self-auto cursor-pointer"
+          >
+            <span>Take Today's Attendance</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
 
       {/* Row 1: 4 Stat Cards from Mockup */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -203,6 +234,19 @@ export default async function TeacherOverviewPage() {
                 <Bell className="w-4 h-4 text-purple-600 group-hover:text-white" />
                 <span>Create Notice</span>
               </Link>
+
+              {session?.classTeacherOf && (
+                <Link
+                  href="/teacher/class-attendance"
+                  className="col-span-2 flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-300 hover:bg-emerald-800 hover:text-white group transition text-xs font-bold text-emerald-900"
+                >
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-emerald-700 group-hover:text-white" />
+                    <span>Take Daily Attendance ({session.classTeacherOf})</span>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-emerald-600 group-hover:text-white" />
+                </Link>
+              )}
             </div>
           </div>
 

@@ -42,6 +42,7 @@ async function main() {
       email: "teacher.science@nayab.edu.pk",
       password: teacherPassword,
       role: "TEACHER",
+      classTeacherOf: "Class 9",
       assignedClasses: JSON.stringify(["Class 8", "Class 9", "Class 10"]),
       assignedSubjects: JSON.stringify([
         { className: "Class 9", subject: "General Science" },
@@ -57,6 +58,7 @@ async function main() {
       email: "teacher.math@nayab.edu.pk",
       password: teacherPassword,
       role: "TEACHER",
+      classTeacherOf: "Class 10",
       assignedClasses: JSON.stringify(["Class 9", "Class 10"]),
       assignedSubjects: JSON.stringify([
         { className: "Class 9", subject: "Mathematics" },
@@ -71,6 +73,7 @@ async function main() {
       email: "teacher.english@nayab.edu.pk",
       password: teacherPassword,
       role: "TEACHER",
+      classTeacherOf: "Class 1",
       assignedClasses: JSON.stringify(["Class 1", "Class 8", "Class 9", "Class 10"]),
       assignedSubjects: JSON.stringify([
         { className: "Class 1", subject: "English" },

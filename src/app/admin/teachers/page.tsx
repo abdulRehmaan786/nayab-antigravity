@@ -11,10 +11,26 @@ interface TeacherItem {
   role: string;
   assignedClasses: string[];
   assignedSubjects: TeacherSubjectAssignment[];
+  classTeacherOf?: string | null;
   createdAt: string;
 }
 
-const AVAILABLE_CLASSES = ["Class 10", "Class 9", "Class 8", "Class 7", "Class 6", "Class 5", "Class 4", "Class 3", "Class 2", "Class 1"];
+const AVAILABLE_CLASSES = [
+  "Class 10",
+  "Class 9",
+  "Class 8",
+  "Class 7",
+  "Class 6",
+  "Class 5",
+  "Class 4",
+  "Class 3",
+  "Class 2",
+  "Class 1",
+  "KG-2",
+  "KG-1",
+  "Nursery",
+];
+
 const AVAILABLE_SUBJECTS = [
   "General Science",
   "Physics",
@@ -35,6 +51,7 @@ export default function AdminTeachersPage() {
   const [editingTeacher, setEditingTeacher] = useState<TeacherItem | null>(null);
   const [editClasses, setEditClasses] = useState<string[]>([]);
   const [editSubjects, setEditSubjects] = useState<TeacherSubjectAssignment[]>([]);
+  const [editClassTeacherOf, setEditClassTeacherOf] = useState<string>("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
 
@@ -43,6 +60,7 @@ export default function AdminTeachersPage() {
   const [createName, setCreateName] = useState("");
   const [createEmail, setCreateEmail] = useState("");
   const [createPassword, setCreatePassword] = useState("");
+  const [createClassTeacherOf, setCreateClassTeacherOf] = useState<string>("");
   const [createClasses, setCreateClasses] = useState<string[]>(["Class 9"]);
   const [createSubjects, setCreateSubjects] = useState<TeacherSubjectAssignment[]>([
     { className: "Class 9", subject: "General Science" },
@@ -73,6 +91,7 @@ export default function AdminTeachersPage() {
     setEditingTeacher(t);
     setEditClasses([...t.assignedClasses]);
     setEditSubjects([...t.assignedSubjects]);
+    setEditClassTeacherOf(t.classTeacherOf || "");
     setEditError(null);
   };
 
@@ -117,6 +136,7 @@ export default function AdminTeachersPage() {
           id: editingTeacher.id,
           assignedClasses: editClasses,
           assignedSubjects: editSubjects,
+          classTeacherOf: editClassTeacherOf || null,
         }),
       });
 
@@ -149,6 +169,7 @@ export default function AdminTeachersPage() {
           password: createPassword,
           assignedClasses: createClasses,
           assignedSubjects: createSubjects,
+          classTeacherOf: createClassTeacherOf || null,
         }),
       });
 
@@ -160,6 +181,7 @@ export default function AdminTeachersPage() {
         setCreateName("");
         setCreateEmail("");
         setCreatePassword("");
+        setCreateClassTeacherOf("");
         loadTeachers();
       }
     } catch {
@@ -218,6 +240,7 @@ export default function AdminTeachersPage() {
                 <tr className="bg-[#1B2A4A] text-white">
                   <th className="p-3.5 font-bold">Teacher Name</th>
                   <th className="p-3.5 font-bold">Email</th>
+                  <th className="p-3.5 font-bold">Class Teacher Role</th>
                   <th className="p-3.5 font-bold">Assigned Classes</th>
                   <th className="p-3.5 font-bold">Assigned Subjects (Restricted Access)</th>
                   <th className="p-3.5 font-bold text-right">Actions</th>
@@ -228,6 +251,16 @@ export default function AdminTeachersPage() {
                   <tr key={t.id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
                     <td className="p-3.5 font-bold text-slate-900">{t.name}</td>
                     <td className="p-3.5 font-mono text-slate-600">{t.email}</td>
+                    <td className="p-3.5">
+                      {t.classTeacherOf ? (
+                        <span className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-300 text-emerald-800 px-2.5 py-1 rounded-full font-bold text-[11px] shadow-xs">
+                          <GraduationCap className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Class Teacher: {t.classTeacherOf}</span>
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 italic text-[11px]">Subject Teacher</span>
+                      )}
+                    </td>
                     <td className="p-3.5">
                       <div className="flex flex-wrap gap-1">
                         {t.assignedClasses.map((c) => (
@@ -310,6 +343,29 @@ export default function AdminTeachersPage() {
             )}
 
             <form onSubmit={handleSaveEdit} className="space-y-5 text-xs">
+              {/* Class Teacher Allocation */}
+              <div className="bg-emerald-50/70 border border-emerald-200 p-4 rounded-2xl">
+                <label className="block font-bold text-emerald-950 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  <GraduationCap className="w-4 h-4 text-emerald-700" />
+                  <span>Designate as Official Class Teacher (Optional)</span>
+                </label>
+                <p className="text-[11px] text-emerald-800 mb-2.5">
+                  Class Teachers have dedicated authority in the Teacher Console to take and manage daily student attendance for their classroom.
+                </p>
+                <select
+                  value={editClassTeacherOf}
+                  onChange={(e) => setEditClassTeacherOf(e.target.value)}
+                  className="w-full bg-white border border-emerald-300 rounded-xl px-3 py-2 font-bold text-xs text-slate-800 focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="">-- None (Subject Teacher Only) --</option>
+                  {AVAILABLE_CLASSES.map((cls) => (
+                    <option key={cls} value={cls}>
+                      Class Teacher of {cls}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Select Assigned Classes */}
               <div>
                 <label className="block font-bold text-slate-700 uppercase tracking-wider mb-2">
@@ -493,6 +549,27 @@ export default function AdminTeachersPage() {
                   onChange={(e) => setCreatePassword(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                 />
+              </div>
+
+              {/* Class Teacher Allocation */}
+              <div className="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
+                <label className="block font-bold text-emerald-950 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  <GraduationCap className="w-4 h-4 text-emerald-700" />
+                  <span>Assign as Class Teacher (Optional)</span>
+                </label>
+                <p className="text-[11px] text-emerald-800 mb-2">
+                  Enables this teacher to take and manage daily student attendance for their assigned classroom in the Teacher Portal.
+                </p>
+                <select
+                  value={createClassTeacherOf}
+                  onChange={(e) => setCreateClassTeacherOf(e.target.value)}
+                  className="w-full bg-white border border-emerald-300 rounded-xl px-3 py-2 font-bold text-xs text-slate-800 focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="">-- None (Subject Teacher Only) --</option>
+                  {AVAILABLE_CLASSES.map((c) => (
+                    <option key={c} value={c}>Class Teacher of {c}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Multi-Subject Assignment Matrix */}

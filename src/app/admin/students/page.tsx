@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Users, Plus, Search, Filter, Trash2, ExternalLink, X, Check, AlertCircle } from "lucide-react";
+import { Users, Plus, Search, Filter, Trash2, ExternalLink, X, Check, AlertCircle, FileCheck, UserX, UserCheck } from "lucide-react";
 import { StudentData } from "@/lib/types";
 
 const CLASSES = [
@@ -26,6 +26,7 @@ export default function AdminStudentsPage() {
   const [students, setStudents] = useState<StudentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedClass, setSelectedClass] = useState("All Classes");
+  const [selectedStatus, setSelectedStatus] = useState<"ACTIVE" | "LEFT" | "all">("ACTIVE");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Modal State
@@ -46,13 +47,13 @@ export default function AdminStudentsPage() {
 
   useEffect(() => {
     loadStudents();
-  }, [selectedClass]);
+  }, [selectedClass, selectedStatus]);
 
   const loadStudents = async () => {
     setLoading(true);
     try {
       const cls = selectedClass === "All Classes" ? "all" : selectedClass;
-      const res = await fetch(`/api/students?className=${encodeURIComponent(cls)}`);
+      const res = await fetch(`/api/students?className=${encodeURIComponent(cls)}&status=${selectedStatus}`);
       const data = await res.json();
       if (data && data.students) {
         setStudents(data.students);
@@ -137,36 +138,79 @@ export default function AdminStudentsPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 bg-[#1B2A4A] hover:bg-[#111C32] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition"
-        >
-          <Plus className="w-4 h-4 text-[#D4AF37]" />
-          <span>Add New Student</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/slc"
+            className="inline-flex items-center gap-2 bg-[#FCF9EE] border border-[#D4AF37] text-[#0D1B3D] hover:bg-[#F3EAC2] px-3.5 py-2.5 rounded-xl text-xs font-bold shadow-xs transition"
+          >
+            <FileCheck className="w-4 h-4 text-[#D4AF37]" />
+            <span>Leaving Certificates (SLC)</span>
+          </Link>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 bg-[#1B2A4A] hover:bg-[#111C32] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition cursor-pointer"
+          >
+            <Plus className="w-4 h-4 text-[#D4AF37]" />
+            <span>Add New Student</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-slate-400 shrink-0" />
-          <select
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
-          >
-            {CLASSES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-          <span className="text-xs text-slate-400 ml-2">
-            ({filtered.length} students)
-          </span>
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+            <select
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            >
+              {CLASSES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Status Tabs */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold">
+            <button
+              onClick={() => setSelectedStatus("ACTIVE")}
+              className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+                selectedStatus === "ACTIVE"
+                  ? "bg-white text-emerald-800 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Active
+            </button>
+            <button
+              onClick={() => setSelectedStatus("LEFT")}
+              className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+                selectedStatus === "LEFT"
+                  ? "bg-white text-amber-800 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Left / Archive
+            </button>
+            <button
+              onClick={() => setSelectedStatus("all")}
+              className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+                selectedStatus === "all"
+                  ? "bg-white text-[#0D1B3D] shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              All ({students.length})
+            </button>
+          </div>
         </div>
 
-        <div className="relative w-full sm:w-72">
+        <div className="relative w-full md:w-72">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
@@ -211,7 +255,14 @@ export default function AdminStudentsPage() {
                   <tr key={s.id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
                     <td className="p-3.5 font-mono font-bold text-[#1B2A4A]">{s.rollNumber}</td>
                     <td className="p-3.5 font-mono text-slate-500 text-[11px]">{(s as StudentData & { grNumber?: string }).grNumber || "—"}</td>
-                    <td className="p-3.5 font-bold text-slate-900">{s.name}</td>
+                    <td className="p-3.5 font-bold text-slate-900">
+                      <span>{s.name}</span>
+                      {s.status === "LEFT" && (
+                        <span className="ml-2 inline-block px-1.5 py-0.5 rounded text-[9.5px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300">
+                          LEFT
+                        </span>
+                      )}
+                    </td>
                     <td className="p-3.5 text-slate-600">{s.fatherName}</td>
                     <td className="p-3.5">
                       <span className="bg-slate-100 border border-slate-200 text-slate-700 font-semibold px-2 py-0.5 rounded">
@@ -220,7 +271,18 @@ export default function AdminStudentsPage() {
                     </td>
                     <td className="p-3.5 text-slate-600">{s.gender}</td>
                     <td className="p-3.5 text-slate-500 font-mono">{s.phone || "—"}</td>
-                    <td className="p-3.5 text-right space-x-2">
+                    <td className="p-3.5 text-right space-x-1.5">
+                      {s.status === "LEFT" ? (
+                        <Link
+                          href="/admin/slc"
+                          className="inline-flex items-center gap-1 bg-[#0D1B3D] hover:bg-[#1E3A8A] text-[#D4AF37] px-2.5 py-1 rounded-lg text-[11px] font-bold shadow-xs transition"
+                          title="View / Print School Leaving Certificate"
+                        >
+                          <FileCheck className="w-3 h-3" />
+                          <span>View SLC</span>
+                        </Link>
+                      ) : null}
+
                       <Link
                         href={`/results?class=${encodeURIComponent(s.className)}&roll=${encodeURIComponent(s.rollNumber)}`}
                         target="_blank"
@@ -232,7 +294,7 @@ export default function AdminStudentsPage() {
                       </Link>
                       <button
                         onClick={() => handleDelete(s.id, s.name)}
-                        className="p-1 text-slate-400 hover:text-rose-600 transition"
+                        className="p-1 text-slate-400 hover:text-rose-600 transition cursor-pointer"
                         title="Remove Student"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

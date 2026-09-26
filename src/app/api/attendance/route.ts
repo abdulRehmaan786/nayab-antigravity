@@ -67,8 +67,10 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Class or school-wide daily register
-    const studentWhere: Record<string, unknown> = {};
+    // Class or school-wide daily register (only ACTIVE enrolled students)
+    const studentWhere: Record<string, unknown> = {
+      status: "ACTIVE",
+    };
     if (className && className !== "all" && className !== "All Classes") {
       studentWhere.className = className;
     }

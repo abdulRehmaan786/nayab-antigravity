@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const className = searchParams.get("className");
+    const status = searchParams.get("status");
     const query = searchParams.get("q")?.toLowerCase();
 
     const where: Record<string, unknown> = {};
@@ -17,6 +18,9 @@ export async function GET(req: NextRequest) {
       } else {
         where.className = className;
       }
+    }
+    if (status && status.toLowerCase() !== "all") {
+      where.status = status.toUpperCase();
     }
     if (query) {
       where.OR = [
@@ -39,6 +43,7 @@ export async function GET(req: NextRequest) {
           orderBy: { createdAt: "desc" },
           take: 1,
         },
+        slc: true,
       },
     });
 
@@ -107,7 +112,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, rollNumber, grNumber, name, fatherName, className, section, gender, phone, dateOfBirth, address } = body;
+    const { id, rollNumber, grNumber, name, fatherName, className, section, gender, phone, dateOfBirth, address, status } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Student ID is required." }, { status: 400 });
@@ -116,16 +121,17 @@ export async function PUT(req: NextRequest) {
     const updated = await db.student.update({
       where: { id },
       data: {
-        rollNumber: String(rollNumber).trim(),
-        grNumber: grNumber ? String(grNumber).trim() : null,
-        name: name.trim(),
-        fatherName: fatherName.trim(),
-        className: className.trim(),
-        section: section ? section.trim() : "A",
-        gender: gender || "Male",
-        phone: phone || null,
-        dateOfBirth: dateOfBirth || null,
-        address: address || null,
+        ...(rollNumber !== undefined && { rollNumber: String(rollNumber).trim() }),
+        ...(grNumber !== undefined && { grNumber: grNumber ? String(grNumber).trim() : null }),
+        ...(name !== undefined && { name: name.trim() }),
+        ...(fatherName !== undefined && { fatherName: fatherName.trim() }),
+        ...(className !== undefined && { className: className.trim() }),
+        ...(section !== undefined && { section: section ? section.trim() : "A" }),
+        ...(gender !== undefined && { gender: gender || "Male" }),
+        ...(phone !== undefined && { phone: phone || null }),
+        ...(dateOfBirth !== undefined && { dateOfBirth: dateOfBirth || null }),
+        ...(address !== undefined && { address: address || null }),
+        ...(status !== undefined && { status }),
       },
     });
 

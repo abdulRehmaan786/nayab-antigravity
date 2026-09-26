@@ -61,7 +61,47 @@ export interface StudentData {
   phone?: string | null;
   dateOfBirth?: string | null;
   address?: string | null;
+  status?: "ACTIVE" | "LEFT" | "ALUMNI" | "STRUCK_OFF" | string;
   attendances?: AttendanceRecordData[];
+  results?: ExamResultData[];
+  fees?: FeeRecordData[];
+  slc?: SchoolLeavingCertificateData | null;
+}
+
+export interface SchoolLeavingCertificateData {
+  id: string;
+  certificateNumber: string;
+  studentId: string;
+  student?: StudentData;
+  grNumber?: string | null;
+  studentName: string;
+  fatherName: string;
+  casteOrSurname?: string | null;
+  nationality: string;
+  religion: string;
+  dateOfBirth?: string | null;
+  dateOfBirthInWords?: string | null;
+  admissionDate?: string | null;
+  admissionClass?: string | null;
+  leavingDate: string;
+  leavingClass: string;
+  leavingClassInWords?: string | null;
+  subjectsStudied: string;
+  lastExamResult?: string | null;
+  qualifiedForPromotion: string;
+  duesClearedMonth?: string | null;
+  feeConcession?: string | null;
+  totalWorkingDays: number;
+  daysAttended: number;
+  generalConduct: string;
+  leavingReason: string;
+  remarks?: string | null;
+  issueDate: string;
+  preparedBy: string;
+  checkedBy: string;
+  headmasterName: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface StaffMemberData {

@@ -33,12 +33,14 @@ model Student {
   phone       String?
   dateOfBirth String?
   address     String?
+  status      String             @default("ACTIVE") // "ACTIVE" | "LEFT" | "ALUMNI" | "STRUCK_OFF"
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 
   results     ExamResult[]
   fees        FeeRecord[]
   attendances AttendanceRecord[]
+  slc         SchoolLeavingCertificate?
 
   @@unique([className, rollNumber])
 }
@@ -166,4 +168,46 @@ model GalleryItem {
   uploadedBy  String   @default("Admin")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model SchoolLeavingCertificate {
+  id                  String   @id @default(uuid())
+  certificateNumber   String   @unique // e.g. "SLC-2025-001"
+  studentId           String   @unique
+  student             Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  grNumber            String?
+  studentName         String
+  fatherName          String
+  casteOrSurname      String?  // e.g. "Memon", "Syed", "Baloch", "Sheikh"
+  nationality         String   @default("Pakistani")
+  religion            String   @default("Islam")
+  dateOfBirth         String?  // in figures e.g. "2010-04-15"
+  dateOfBirthInWords  String?  // e.g. "Fifteenth April Two Thousand Ten"
+  
+  admissionDate       String?  // e.g. "2020-04-01"
+  admissionClass      String?  // e.g. "Class 1"
+  leavingDate         String   // e.g. "2025-09-26"
+  leavingClass        String   // e.g. "Class 9"
+  leavingClassInWords String?  // e.g. "Ninth"
+  
+  subjectsStudied     String   @default("English, Mathematics, General Science, Urdu, Islamiyat, Sindhi, Computer Science")
+  lastExamResult      String?  // e.g. "Passed Class 9th Annual Exam with Grade A+"
+  qualifiedForPromotion String @default("Yes, Promoted to next higher class")
+  duesClearedMonth    String?  // e.g. "September 2025 (All school dues fully cleared)"
+  feeConcession       String?  @default("None")
+  
+  totalWorkingDays    Int      @default(210)
+  daysAttended        Int      @default(198)
+  generalConduct      String   @default("Good & Moral Character")
+  leavingReason       String   // e.g. "Parent's Transfer / Relocation", "Admission in College"
+  remarks             String?  // e.g. "A sincere and hardworking student. We wish him/her the best of success."
+  
+  issueDate           String   // e.g. "2025-09-26"
+  preparedBy          String   @default("Admin Office")
+  checkedBy           String   @default("Controller of Examination")
+  headmasterName      String   @default("Principal / Headmaster")
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }

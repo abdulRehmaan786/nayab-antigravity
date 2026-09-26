@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   Camera,
+  FileCheck,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -34,6 +35,7 @@ const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Academics", href: "/admin/teachers", icon: GraduationCap },
   { name: "Students", href: "/admin/students", icon: Users },
+  { name: "Leaving Certificates", href: "/admin/slc", icon: FileCheck },
   { name: "Examinations", href: "/admin/results", icon: FileText },
   { name: "Finance", href: "/admin/fees", icon: CreditCard },
   { name: "Staff & Payroll", href: "/admin/staff", icon: Briefcase },

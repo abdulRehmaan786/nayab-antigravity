@@ -17,6 +17,7 @@ import {
   Pin,
   TrendingUp,
   AlertTriangle,
+  FileCheck,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -96,11 +97,14 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-[#F2F4F7] text-[#0D1B3D] border border-slate-200 px-3.5 py-2 rounded-xl text-xs font-semibold">
-            <Calendar className="w-3.5 h-3.5 text-[#1E3A8A]" />
-            <span>09 May, 2025</span>
-          </div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/admin/slc"
+            className="inline-flex items-center gap-1.5 bg-[#FCF9EE] text-[#0D1B3D] border border-[#D4AF37] px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-[#F3EAC2] transition shadow-xs"
+          >
+            <FileCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Leaving Certificates (SLC)</span>
+          </Link>
 
           <Link
             href="/admin/attendance"

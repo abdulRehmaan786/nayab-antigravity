@@ -432,8 +432,19 @@ function MarksEntryContent() {
                           type="number"
                           min="0"
                           max={row.targetMax}
-                          value={row.targetObtained}
-                          onChange={(e) => handleScoreChange(row.studentId, Number(e.target.value))}
+                          value={row.targetObtained === 0 && !row.saved ? "" : row.targetObtained}
+                          placeholder="0"
+                          onFocus={(e) => e.target.select()}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            if (raw === "") {
+                              handleScoreChange(row.studentId, 0);
+                              return;
+                            }
+                            const unpadded = raw.replace(/^0+(?=\d)/, "");
+                            const num = parseInt(unpadded, 10);
+                            handleScoreChange(row.studentId, isNaN(num) ? 0 : Math.min(num, row.targetMax));
+                          }}
                           className="w-20 h-9 text-center bg-white border-2 border-[#D4AF37] rounded-xl font-extrabold text-base text-[#1B2A4A] focus:ring-2 focus:ring-[#1B2A4A] shadow-inner"
                         />
                       </td>

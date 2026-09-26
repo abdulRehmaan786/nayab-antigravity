@@ -700,7 +700,12 @@ export default function AdminStaffPage() {
                   required
                   min="0"
                   value={createData.monthlySalary}
-                  onChange={(e) => setCreateData({ ...createData, monthlySalary: e.target.value })}
+                  onFocus={(e) => e.target.select()}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    const cleaned = raw.replace(/^0+(?=\d)/, "");
+                    setCreateData({ ...createData, monthlySalary: cleaned });
+                  }}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                 />
               </div>

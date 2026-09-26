@@ -292,9 +292,13 @@ export default function AdminStudentsPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. 107"
+                    placeholder="e.g. 5, 43, 101"
                     value={formData.rollNumber}
-                    onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      const cleaned = e.target.value.replace(/^0+(?=\d)/, "");
+                      setFormData({ ...formData, rollNumber: cleaned });
+                    }}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                   />
                 </div>
@@ -364,8 +368,9 @@ export default function AdminStudentsPage() {
                 <label className="block font-bold text-slate-700 mb-1">Parent Phone / Mobile</label>
                 <input
                   type="text"
-                  placeholder="+92 300 1234567"
+                  placeholder="0300 1234567 or +92 300 1234567"
                   value={formData.phone}
+                  onFocus={(e) => e.target.select()}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                 />

@@ -437,8 +437,20 @@ export default function AdminFeesPage() {
                   <label className="block font-bold text-slate-700 mb-1">Fee Amount (Rs.)</label>
                   <input
                     type="number"
-                    value={newFeeAmount}
-                    onChange={(e) => setNewFeeAmount(Number(e.target.value))}
+                    min="0"
+                    value={newFeeAmount === 0 ? "" : newFeeAmount}
+                    placeholder="0"
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      if (raw === "") {
+                        setNewFeeAmount(0);
+                        return;
+                      }
+                      const unpadded = raw.replace(/^0+(?=\d)/, "");
+                      const num = parseInt(unpadded, 10);
+                      setNewFeeAmount(isNaN(num) ? 0 : num);
+                    }}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#1B2A4A]"
                   />
                 </div>

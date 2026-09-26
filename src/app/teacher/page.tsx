@@ -10,7 +10,6 @@ import {
   Clock,
   BookOpen,
   Calendar,
-  Fingerprint,
   Bell,
   PlusCircle,
   ExternalLink,

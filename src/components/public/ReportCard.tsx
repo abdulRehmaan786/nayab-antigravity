@@ -244,20 +244,20 @@ export default function ReportCard({ student, result, onBack }: ReportCardProps)
           </div>
         </div>
 
-        {/* Biometric Attendance Verification Block */}
+        {/* Official Attendance Record Block */}
         <div className="bg-[#F8F9FB] border border-slate-200 rounded-xl p-3.5 mb-6 text-xs relative z-10 flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-              Biometric Gate Attendance Record
+              Official Attendance Record
             </span>
             <p className="font-bold text-slate-900 mt-0.5">
-              Attendance Standing: <strong className="text-emerald-800">96.0%</strong> (46 Present / 48 Working Days)
+              Attendance Standing: <strong className="text-emerald-800">96.0%</strong> (Regular & Punctual)
             </p>
           </div>
           <div className="flex items-center gap-3 text-[11px] text-slate-500">
-            <span>• Biometric Verification: <strong className="text-[#1B2A4A]">Confirmed</strong></span>
-            <span>• Punctuality: <strong className="text-emerald-700">Satisfactory</strong></span>
-            <span>• Gate Terminal: <strong className="font-mono text-slate-700">BIO-GATE-01</strong></span>
+            <span>• Register Record: <strong className="text-[#1B2A4A]">Verified</strong></span>
+            <span>• Conduct: <strong className="text-emerald-700">Satisfactory</strong></span>
+            <span>• Verification: <strong className="text-slate-700">Class Roll-Call</strong></span>
           </div>
         </div>
 

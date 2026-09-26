@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
       };
     }
 
-    // Calculate Biometric Attendance Summary
+    // Calculate Attendance Summary
     const attendances = student.attendances || [];
     const totalDays = attendances.length;
     const presentDays = attendances.filter((a) => a.status === "PRESENT").length;
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
     const percentage =
       totalDays > 0 ? Number((((presentDays + lateDays) / totalDays) * 100).toFixed(1)) : 100;
 
-    const latestPunch = attendances[0] || null;
+    const latestAttendance = attendances[0] || null;
 
     const attendanceSummary = {
       totalDays,
@@ -109,15 +109,22 @@ export async function GET(req: NextRequest) {
       absentDays,
       leaveDays,
       percentage,
-      todayStatus: latestPunch
+      todayStatus: latestAttendance
         ? {
-            status: latestPunch.status,
-            checkInTime: latestPunch.checkInTime,
-            deviceId: latestPunch.deviceId,
-            deviceType: latestPunch.deviceType,
-            date: latestPunch.date,
+            status: latestAttendance.status,
+            checkInTime: latestAttendance.checkInTime,
+            deviceId: latestAttendance.deviceId,
+            deviceType: latestAttendance.deviceType,
+            date: latestAttendance.date,
           }
         : { status: "NOT_RECORDED" },
+      recentLogs: attendances.slice(0, 10).map((a) => ({
+        id: a.id,
+        date: a.date,
+        status: a.status,
+        checkInTime: a.checkInTime,
+        remarks: a.remarks,
+      })),
     };
 
     // Also get active announcements

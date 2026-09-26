@@ -21,7 +21,7 @@ export interface AttendanceRecordData {
   date: string;
   status: "PRESENT" | "LATE" | "ABSENT" | "LEAVE";
   checkInTime?: string | null;
-  deviceType: "BIOMETRIC_FINGERPRINT" | "RFID_CARD" | "MANUAL" | string;
+  deviceType: "MANUAL" | "CLASS_REGISTER" | "BIOMETRIC_FINGERPRINT" | "RFID_CARD" | string;
   deviceId?: string | null;
   remarks?: string | null;
   createdAt: string | Date;
@@ -40,6 +40,13 @@ export interface AttendanceSummary {
     deviceId?: string | null;
     deviceType?: string | null;
   };
+  recentLogs?: {
+    id: string;
+    date: string;
+    status: "PRESENT" | "LATE" | "ABSENT" | "LEAVE" | string;
+    checkInTime?: string | null;
+    remarks?: string | null;
+  }[];
 }
 
 export interface StudentData {

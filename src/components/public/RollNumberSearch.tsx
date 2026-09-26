@@ -14,7 +14,6 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
-  Fingerprint,
   GraduationCap,
   Calendar,
   FileSpreadsheet,
@@ -104,7 +103,7 @@ export default function RollNumberSearch({ initialClass = "Class 9", initialRoll
             Check Result / Student Information
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Access student profiles, examination results, biometric attendance, and fee status instantly.
+            Access student profiles, examination results, daily attendance, and fee status instantly.
           </p>
         </div>
 
@@ -271,13 +270,27 @@ export default function RollNumberSearch({ initialClass = "Class 9", initialRoll
             </div>
 
             {/* Quick Actions */}
-            <div className="flex items-center gap-2 self-start sm:self-auto">
+            <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+              <Link
+                href={`/parent?class=${encodeURIComponent(resultData.student.className)}&roll=${encodeURIComponent(resultData.student.rollNumber)}`}
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1.5 rounded-xl text-xs border border-white/20 transition"
+              >
+                <User className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Parent View</span>
+              </Link>
+              <Link
+                href={`/student?class=${encodeURIComponent(resultData.student.className)}&roll=${encodeURIComponent(resultData.student.rollNumber)}`}
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1.5 rounded-xl text-xs border border-white/20 transition"
+              >
+                <GraduationCap className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Student View</span>
+              </Link>
               <Link
                 href={`/results?className=${encodeURIComponent(resultData.student.className)}&rollNumber=${encodeURIComponent(resultData.student.rollNumber)}`}
                 className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-amber-400 text-[#0D1B3D] font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow transition"
               >
                 <Printer className="w-4 h-4" />
-                <span>Full Official Report Card</span>
+                <span>Print Report Card</span>
               </Link>
             </div>
           </div>
@@ -320,12 +333,12 @@ export default function RollNumberSearch({ initialClass = "Class 9", initialRoll
               </Link>
             </div>
 
-            {/* 2. Biometric Gate Attendance */}
+            {/* 2. Daily Attendance Record */}
             <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Biometric Attendance</span>
-                  <Fingerprint className="w-4 h-4 text-[#22C55E]" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Attendance Standing</span>
+                  <Clock className="w-4 h-4 text-[#22C55E]" />
                 </div>
                 {resultData.attendanceSummary ? (
                   <div className="mt-3">
@@ -366,7 +379,7 @@ export default function RollNumberSearch({ initialClass = "Class 9", initialRoll
               </div>
               <div className="text-[11px] text-slate-400 mt-4 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                <span>Gate Scanner Active (BIO-GATE-01)</span>
+                <span>Daily Class Register Verified</span>
               </div>
             </div>
 

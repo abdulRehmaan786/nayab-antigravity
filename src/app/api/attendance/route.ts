@@ -142,8 +142,8 @@ export async function POST(req: NextRequest) {
       rollNumber,
       className,
       studentId: directStudentId,
-      deviceId = "BIO-GATE-01",
-      deviceType = "BIOMETRIC_FINGERPRINT",
+      deviceId = "CLASS-REGISTER",
+      deviceType = "MANUAL",
       date = getTodayString(),
       customTime,
       forcedStatus,
@@ -195,8 +195,12 @@ export async function POST(req: NextRequest) {
 
     const remarks =
       status === "LATE"
-        ? `Late punch at ${checkInTime} via ${deviceId}`
-        : `Verified biometric punch at ${checkInTime}`;
+        ? `Late arrival at ${checkInTime}`
+        : status === "LEAVE"
+        ? "Approved Leave"
+        : status === "ABSENT"
+        ? "Absent"
+        : `Present at ${checkInTime}`;
 
     const record = await db.attendanceRecord.upsert({
       where: {
@@ -225,7 +229,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      message: `Biometric Punch Verified: ${targetStudent.name} (${targetStudent.className}, Roll ${targetStudent.rollNumber}) marked as ${status}.`,
+      message: `Daily Attendance Recorded: ${targetStudent.name} (${targetStudent.className}, Roll ${targetStudent.rollNumber}) marked as ${status}.`,
       student: {
         id: targetStudent.id,
         name: targetStudent.name,
@@ -236,8 +240,8 @@ export async function POST(req: NextRequest) {
       record,
     });
   } catch (error) {
-    console.error("Biometric punch error:", error);
-    return NextResponse.json({ error: "Failed to process biometric punch" }, { status: 500 });
+    console.error("Attendance record error:", error);
+    return NextResponse.json({ error: "Failed to record attendance" }, { status: 500 });
   }
 }
 

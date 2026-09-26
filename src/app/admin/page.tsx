@@ -11,7 +11,6 @@ import {
   Clock,
   XCircle,
   GraduationCap,
-  Fingerprint,
   BookOpen,
   Bookmark,
   Calendar,
@@ -107,8 +106,8 @@ export default async function AdminDashboardPage() {
             href="/admin/attendance"
             className="inline-flex items-center gap-1.5 bg-[#0D1B3D] text-white px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-[#1E3A8A] transition shadow-xs"
           >
-            <Fingerprint className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>Gate Simulator</span>
+            <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Attendance Register</span>
           </Link>
         </div>
       </div>

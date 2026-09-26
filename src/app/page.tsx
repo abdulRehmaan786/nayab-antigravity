@@ -58,7 +58,7 @@ export default async function HomePage() {
             </div>
 
             <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-              We are committed to providing quality education and creating a better future for our students. Explore examination marksheets, biometric gate attendance, fee challans, and campus circulars.
+              We are committed to providing quality education and creating a better future for our students. Explore examination marksheets, daily attendance, fee challans, and campus circulars.
             </p>
 
             <div className="flex items-center gap-3 pt-2">
@@ -422,7 +422,7 @@ export default async function HomePage() {
                   <span className="font-bold text-white">7:45 AM</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-white/10">
-                  <span className="text-slate-300">Biometric Gate Cut-Off:</span>
+                  <span className="text-slate-300">Morning Gate & Assembly Cut-Off:</span>
                   <span className="font-bold text-[#D4AF37]">8:15 AM Sharp</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-white/10">

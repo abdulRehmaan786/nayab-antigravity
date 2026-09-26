@@ -83,7 +83,7 @@ export default function Footer() {
                 </div>
               </div>
               <p className="text-[11px] text-slate-400 pt-1">
-                Biometric Gate Arrival Cut-off: 8:15 AM
+                Morning Gate & Assembly Cut-off: 8:15 AM
               </p>
             </div>
           </div>

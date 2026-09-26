@@ -87,10 +87,10 @@ export default function AboutPage() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-bold text-[#0D1B3D]">
                 <CheckCircle className="w-4 h-4 text-[#22C55E]" />
-                <span>Biometric Attendance Gate</span>
+                <span>Daily Attendance & Punctuality</span>
               </div>
               <p className="text-xs text-slate-600">
-                Automated optical fingerprint gates ensuring student safety, punctual attendance, and parent transparency.
+                Daily roll-call registers managed by class teachers, ensuring student discipline, safety, and transparent reporting for parents.
               </p>
             </div>
 

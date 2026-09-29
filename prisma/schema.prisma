@@ -85,8 +85,8 @@ model AttendanceRecord {
   date        String   // e.g. "2025-09-10" (YYYY-MM-DD)
   status      String   // "PRESENT" | "LATE" | "ABSENT" | "LEAVE"
   checkInTime String?  // e.g. "07:52 AM"
-  deviceType  String   @default("BIOMETRIC_FINGERPRINT") // "BIOMETRIC_FINGERPRINT" | "RFID_CARD" | "MANUAL"
-  deviceId    String?  @default("BIO-GATE-01")
+  deviceType  String   @default("MANUAL") // "MANUAL" | "CLASS_REGISTER"
+  deviceId    String?  @default("CLASS_REGISTER")
   remarks     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

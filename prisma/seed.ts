@@ -460,14 +460,14 @@ async function main() {
     });
   }
 
-  console.log("📲 Seeding Biometric Attendance Logs...");
+  console.log("📋 Seeding Daily Class Attendance Logs...");
   const recentDates = ["2025-09-08", "2025-09-09", "2025-09-10"];
 
   for (const dateStr of recentDates) {
     for (const student of createdStudents) {
       let status = "PRESENT";
       let checkInTime: string | null = "07:52 AM";
-      let remarks = "On-time biometric verification";
+      let remarks = "Marked present in morning roll-call";
 
       // Create realistic variation
       if (student.rollNumber === "105" && dateStr === "2025-09-10") {
@@ -496,8 +496,8 @@ async function main() {
           date: dateStr,
           status,
           checkInTime,
-          deviceType: "BIOMETRIC_FINGERPRINT",
-          deviceId: student.section === "B" || student.rollNumber.startsWith("2") ? "BIO-GATE-02" : "BIO-GATE-01",
+          deviceType: "CLASS_REGISTER",
+          deviceId: "CLASS_ROLL_CALL",
           remarks,
         },
       });

@@ -21,7 +21,7 @@ export interface AttendanceRecordData {
   date: string;
   status: "PRESENT" | "LATE" | "ABSENT" | "LEAVE";
   checkInTime?: string | null;
-  deviceType: "MANUAL" | "CLASS_REGISTER" | "BIOMETRIC_FINGERPRINT" | "RFID_CARD" | string;
+  deviceType: "MANUAL" | "CLASS_REGISTER" | string;
   deviceId?: string | null;
   remarks?: string | null;
   createdAt: string | Date;

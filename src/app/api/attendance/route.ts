@@ -138,7 +138,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const session = await getCurrentSession();
-    // Allow simulation / punch by staff or direct device webhook
+    // Record daily class attendance for a student
     const body = await req.json();
     const {
       rollNumber,

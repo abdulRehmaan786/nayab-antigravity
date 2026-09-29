@@ -4,7 +4,7 @@ import { AuthSession } from "./types";
 import { db } from "./db";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "nayab-grammar-school-mirwah-super-secret-key-2025"
+  process.env.JWT_SECRET || "local-dev-fallback-key-do-not-use-in-production"
 );
 
 const COOKIE_NAME = "ngs_auth_token";

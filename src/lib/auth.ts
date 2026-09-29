@@ -44,6 +44,10 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
 
     // Synchronize latest classTeacherOf and assignments in real-time from DB
     try {
+      if (!/^[0-9a-fA-F]{24}$/.test(session.userId)) {
+        return null;
+      }
+
       const dbUser = await db.user.findUnique({
         where: { id: session.userId },
         select: {
@@ -54,6 +58,10 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
           assignedSubjects: true,
         },
       });
+
+      if (!dbUser) {
+        return null;
+      }
 
       if (dbUser) {
         let assignedClasses = session.assignedClasses;

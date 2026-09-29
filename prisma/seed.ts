@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Clearing old data...");
+  await prisma.schoolLeavingCertificate.deleteMany();
   await prisma.staffAttendance.deleteMany();
   await prisma.staffSalary.deleteMany();
   await prisma.staffMember.deleteMany();
